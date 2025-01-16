@@ -1,2 +1,2 @@
-# codeabode101.github.io
-our site
+# codeabode
+the codeabode website 
