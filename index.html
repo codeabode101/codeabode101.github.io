@@ -1,131 +1,322 @@
-<!doctype html>
-<html>
-	<head>
-		<title>codeabode | Learn Real Tech</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<meta name="description" content="Computer science tutoring in Princeton Junction, NJ">
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	    <meta name="keywords" content="codeabode, coding, education, learn coding, web development, machine learning, learn to code, teach kids, kids, coding, programming, learn machine learning, low level development, bootcamp, teach programming, learn programming, development, robotics, arduino, computer science, college prep, software engineering, coding classes, coding school, coding tutorials, programming languages, Python, Java, JavaScript, HTML, CSS, software development, artificial intelligence, AI, deep learning, data science, cybersecurity, tech education, STEM education, online learning, coding for beginners, coding for kids, coding for teens, coding workshops, coding projects, coding challenges, coding resources, learn robotics, learn Arduino, learn computer science, learn coding online, coding bootcamp, coding courses, coding lessons, tech skills, programming skills, learn programming languages, software skills, tech training, computer coding, software programming, tech tutorials, advanced coding, algorithm, data structures, web design, mobile app development, game development, UX design, UI development, frontend development, backend development, cloud computing, DevOps, agile development, software architecture, coding tips, coding techniques, coding mastery, coding career, programming career, learn coding fast, programming for beginners, programming for kids, coding community, coding practice, coding theory, software development lifecycle, learn AI, learn data analysis, coding exercises, coding logic, coding syntax, coding best practices, coding interviews, coding certification, coding fundamentals, programming principles, software coding, coding standards, coding mastery, tech innovation, digital literacy, online coding, tech tutorials, programming tutorials">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeAbode</title>
+  <link rel="icon" type="image/x-icon" href="IMG_2791.jpg">
+  <link rel="stylesheet" href="./style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <link rel="icon" type="image/x-icon" href="logo.png">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo"><a href="#home">CodeAbode</a></div>
+      <div class="hamburger" id="hamburger">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#mission">Our Mission</a></li>
+        <li><a href="#curriculum">Curriculum</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#team">Team</a></li>
+      </ul>
+    </nav>
+  </header>
 
-		<meta property="og:description" content="Computer science tutoring in Princeton Junction, NJ">
-		<meta property="og:title" content="codeabode">
-		<meta property="og:url" content="https://codeabode.co/">
-		<meta property="og:type" content="website">
-		<meta property="og:image" content="/space.jpg">
+  <section id="home" class="hero full-screen">
+    <div class="hero-overlay">
+      <div class="hero-content container">
+        <h1 class="hero-title">Welcome to <span>CodeAbode</span></h1>
+        <p class="hero-subtitle">Empowering the next generation of coders through personalized tutoring.</p>
+  
+        <div class="home-benefits">
+          <div class="benefit-card">✅ Stand apart from others</div>
+          <div class="benefit-card">✅ Develop programming skills</div>
+          <div class="benefit-card">✅ Learn logical and problem-solving skills</div>
+        </div>
+  
+        <a href="#mission" class="cta-button">Get Started</a>
+      </div>
+    </div>
+  </section>
+  
+  <section id="mission" class="section alt full-screen mission-section">
+    <h2 class="white">Our Mission</h2>
+    <div class="mission-image-row">
+        <img src="varpanteach.png" alt="Kids learning programming" class="mission-image" />
+        <img src="omteach.png" alt="Kids building tech" class="mission-image" />
+      </div>
+      
+      
+    <div class="mission-tagline-box">
+      <p class="tagline-primary">Give your kid a head start.</p>
+      <p class="tagline-secondary">Projects your child loves help them learn real world skills faster.</p>
+    </div>
+  
+    <div class="mission-content">
+      <p class="description">
+        We're an organization based in Plainsboro, NJ dedicated to personalized teaching, preparing future programmers to push boundaries in computer science and software engineering.
+      </p>
+  
+      <div class="mission-columns">
+        <div class="column">
+          <h3>How CodeAbode Helps</h3>
+          <ul>
+            <li>Learn Beginner Scratch lessons all the way to advanced Object Oriented Programing concepts through Python, C++</li>
+            <li>Build a Website</li>
+            <li>Create a Video Game</li>
+            <li>Develop an App</li>
+            <li>Train an AI Model</li>
+            <li>Compete in USACO or ACSL</li>
+            <li>Construct a (physical) Robot</li>
+            <li>Receive PCEP, Harvard CS50 AI, or other Certifications</li>
+            <li>… anything you dream of!</li>
+          </ul>
+        </div>
+        <div class="column">
+          <h3>Our Impact So Far</h3>
+          <ul>
+            <li>Taught 100+ kids at the Plainsboro library since October</li>
+            <li>One-on-one classes every Sunday with multiple students ranging from 7-12 years old</li>
+            <li>Created personalized curricula to meet each kid’s needs</li>
+          </ul>
+        </div>
+      </div>
+  
+      <div class="mission-highlight">
+        <p>Parents want their kids to be productive, improve themselves, and be the best version of themselves at a young age. Additionally, kids need fun, a lot of fun, yet a productive space to work through.
+        </p>
+       
+        <h3>Codeabode classes are the solution!</h3>
+        <p>We understand how challenging it is to guide kids in their programming journey. If your child wants to learn programming while also having fun, Codeabode is the perfect choice!</p>
+      </div>
+  
+      <div class="mission-cards">
+        <div class="card">
+          <h3>Competency & Authority</h3>
+          <ul>
+            <li>5+ years of coding experience</li>
+            <li>Certifications in multiple programming languages</li>
+            <li>Winners of HackNYU and HackTCNJ</li>
+            <li>Passion for teaching and empowering kids</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Successful Results</h3>
+          <ul>
+            <li>Confidently build their own projects</li>
+            <li>Gain career-ready programming skills</li>
+            <li>Feel empowered and creatively fulfilled</li>
+          </ul>
+        </div>
+      </div>
+  
+      <div class="before-after">
+        <div class="before">
+          <h4>Before:</h4>
+          <p>Insecure in their skills, not sure where to begin...</p>
+        </div>
+        <div class="after">
+          <h4>After:</h4>
+          <p>Confident young programmer 🚀</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  
+  
 
-		<link rel="stylesheet" type="text/css" href="style.css">
-	</head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-06BN9D4XJT"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+  <section id="curriculum" class="section curriculum-section">
+    <h2>Only The Best Tools!</h2>
+    <p class="lead-text">
+      Our curriculum is as hands on as possible, curated from top university courses and real-world problem solving.
+    </p>
+    <p>
+        A sample of our curriculum can be found here:
+        
+      </p>
 
-      gtag('config', 'G-06BN9D4XJT');
-    </script>
-	<body>
-		<header>
-			<nav style="line-height: 1.35;">
-				<br>
-				<span>
-					<a href="/#mission"> Our Mission </a> &middot;
-					<a href="/#curriculum"> Curriculum </a> &middot;
-					<a href="/contact.html"> Contact</a> &middot;
-					<a href="/team.html">Team </a>
-				</span>
-			</nav>
-			<h1>codeabode</h1>
-		</header>
+      <p>
+        <a class="btn curriculum-btn" href="https://codeabode.co/SampleCurriculum.pdf" target="_blank">Curriculum</a>
+      </p>
+  
+    <div class="library-classes">
+      <h3>Plainsboro Library Classes</h3>
+      <p>
+        For students near Plainsboro, NJ, we offer library classes for free!
+      </p>
+      <p>
+        In our library classes, we teach children essential programming skills through project-based learning, guiding them to create their dream games using Scratch or Python.
+      </p>
+      <p>
+        Classes are held at the Plainsboro Public Library every two weeks. Walk-ins are welcome. We have a limited supply of laptops, so it is suggested to bring your own laptop.
+      </p>
+      <p>
+        Visit us at 9 Van Doren St, Plainsboro, NJ 08536 / Our next meeting is on June 15th from 10:45am–12pm!
+        
+      </p>
 
-		<main>
-            <div class="next-meeting">
-                Our next Plainsboro Library meeting is on <b>June 15</b> between <b>10:45 AM - 12 PM</b><br>
-                <a href="/#library">Wonder what this is about?</a>
-            </div>
-			<div align="center" id="landing">
-				<h2>Give your kid a head start.</h2>
-				<p style="font-size: 18pt">Projects your child loves helps them learn real world skills faster.</p>
-				<a href="/contact.html" class="action_button">Start your kid's tech journey &#x2197;</a>
-				<br>
-				<br>
-                <!--
-				<a href="https://codeabode.beehiiv.com" class="lesser_action_button" target="_blank">Get email updates &#x2197;</a>
-				<br>
-				<br>
-                -->
-			</div>
+      <p>
+       
+        <a class="btn signup-btn" href="https://plainsborolibrary.org/events/coding-workshop-with-codeabode-849-779-163-903-263/" target="_blank">Sign Up for Plainsboro Classes</a>
+      </p>
+      
+     
+    </div>
 
-			<div align="center" id="mission">
-				<img src="huge.jpg" alt="ENIAC">
-				<span><i>Your child's potential realized.</i></span>
-			</div>
+    <div class="library-classes">
+        <h3>Trenton Library Classes</h3>
+        <p>
+            New classes opening up in the summer, every Saturday at 4:00 pm!
 
-			<p>We're an organization based in Plainsboro, NJ that's all about personalized teaching for preparing future programmers, pushing themselves into the forefront of computer science and software engineering.<br>
-			<br><b>codeabode</b> can help your child:</p>
+        </p>
+        <p>
+          Classes will be held in the Computer Tech room.
+        </p>
+        <p>
+          Visit us at 1115 Greenwood Ave, Trenton, NJ 08609
+        </p>
+      </div>
+  
+    <div class="one-on-one-classes">
+      <h3>1-on-1 Classes</h3>
+      <p>
+        Our weekly library classes can only push your child so far. If you or your child wants:
+      </p>
+      <ul>
+        <li>Personalized Curriculum</li>
+        <li>Flexible hours anytime throughout the week</li>
+        <li>Innovative STEM Projects</li>
+        <li>Virtual/In Person</li>
+        <li>Train for a Competition (e.g. USACO, ACSL)</li>
+        <li>Obtain a certification (e.g. PCEP, CS50 AI, etc.)</li>
+      </ul>
+      <p>
+        Consider booking 1-on-1 classes with our top-notch instructors. They can help your child reach their full potential in no time.
+      </p>
+      <ul>
+        <li>1. Email us to discuss your child's interests and goals.</li>
+        <li>2. Set up a phone call for personalized advice.</li>
+        <li>3. Enroll your child in tailored programming classes.</li>
+        <li>4. Try one free class and see how you feel!</li>
+       
+      </ul>
+      
+    </div>
+  </section>
 
-            <ul>
-                <li>Build a <b>Website</b></li>
-                <li>Create a <b>Video Game</b></li>
-                <li>Develop an <b>App</b></li>
-                <li>Train an <b>AI</b> Model</li>
-                <li>Compete in <b>USACO or ACSL</b></li>
-                <li>Construct a (physical) <b>Robot</b></li>
-		<li>Receive PCEP, <b>Harvard</b> CS50 AI, or other <b>Certifications</b></li>
-                <li>... anything you dream of!</li>
-            </ul>
-			<hr>
+  <section id="reviews" class="section reviews-section full-screen">
+    <div class="review-container">
+      <h2 class="section-title">Reviews</h2>
+      <div class="review-card">
+        <blockquote class="review-text">
+          “Seyon loved these classes because they directly aligned with his interests. Unlike his other classes, they allowed him to truly grow as a student and discover his passion for coding. The curriculum was thoughtfully designed to meet his needs, enabling him to progress rapidly—he is now ahead of most of his peers. His enthusiasm was so strong that he once cried because he wanted to attend the classes even more! Seyon truly enjoys coding and has discovered a strong passion for it!”
+        </blockquote>
+        <p class="reviewer-name">— Parent of Seyon</p>
+      </div>
+    </div>
+  </section>
+  
+  <section id="pricing" class="section pricing-section">
+    <div class="pricing-box">
+      <h2>Pricing</h2>
+      <p>
+        As mentioned previously, our library classes are <strong>100% free!</strong>
+      </p>
+      <p>
+        Our 1-on-1 classes cost <strong>$89/month</strong> for 1 class/week. With 4 weeks per month, that comes to <strong>$22.5 per class.</strong>
+      </p>
+      <p>
+        If you are interested in 1-on-1 classes, please <a href="#contact">contact us</a>!
+      </p>
+    </div>
+  </section>
 
-			<h2 id="curriculum">Only the best tools</h2>
-			<p>Our curriculum is as hands on as possible, curated from top university courses and real-world problem solving.<br><br>
-			A sample of our curriculum can be found <a href="/SampleCurriculum.pdf">here.</a></p>
 
-			<img src="server.jpg">
+  
+  
+  
+  <section id="contact" class="section contact-section">
+    <h2>Contact Us</h2>
+    <form id="contact-form" action="https://formspree.io/f/xeogbndr" method="POST">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" placeholder="Your full name" required>
+  
+      <label for="email">Email</label>
+      <input type="email" id="email" name="_replyto" placeholder="you@example.com" required>
+  
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="6" placeholder="Write your message here..." required></textarea>
+  
+      <button type="submit">Submit</button>
+    </form>
+  </section>
 
-			<h3 id="library">Plainsboro Library Classes</h3>
-			<p>For students near Plainsboro, NJ, we offer library classes <b>for free!</b></p>
-			<p>In our library classes, we teach children essential programming skills through project-based learning, guiding them to create their <b>dream games</b> using <b>Scratch</b> or <b>Python.</b></p>
-			<p>Classes are held at the Plainsboro Public Library every two weeks. Walk-ins are welcome. We have a limited supply of them of laptops, so it is suggested to <b>bring your own laptop.</b></p>
-			<p><mark>Visit us at <a href="https://www.google.com/maps/place/Plainsboro+Public+Library/@40.3348009,-74.5932512,17z/data=!3m1!4b1!4m5!3m4!1s0x89c3ddf0b3b00771:0xde5b032103916de6!8m2!3d40.3348009!4d-74.5910625"
-				target="_blank" rel="noopener">9 Van Doren St, Plainsboro, NJ 08536</a> / 10:45am-12pm.</mark></p>
+  <section id="team" class="section team-section">
+    <h2>Meet the Team</h2>
+    <div class="team-container">
+      <div class="team-member">
+        <img src="varteam.png" alt="Founder 1" class="team-photo" />
+        <a href="https://www.linkedin.com/in/varun-pannala-050a6627a/" target="_blank">Varun Pannala</a>
+      </div>
+      <div class="team-member">
+        <img src="omteam.png" alt="Founder 2" class="team-photo" />
+        <a href="https://www.linkedin.com/in/om-raheja-91a26b314/ " target="_blank">Om Raheja</a>
+      </div>
+    </div>
+  </section>
+  
+  
 
-			<h3>1-on-1 Classes</h3>
-			<p>Our biweekly library classes can only push your child so far. If you or your child wants:</p>
+  <footer>
+    <div class="footer-container">
+        <h1>Contact Us</h1>
+        
+        <div class="social">
+            <a href="tel:609-480-9208" target="_blank"><i class="fa-solid fa-phone"></i></a>
+            
+            <a href="https://mail.google.com/mail/u/0/#inbox?compose=GTvVlcRzDfnVXZPqsrkSXStvKgWQjdGwgQMjpzLFZMFWMdqKQlvHnJXWCSjQzVHGqNWBpVxGMXFTm" target="_blank"><i class="fa-solid fa-envelope"></i></a>
+            
+        </div>
 
-			<ul>
-				<li>Personalized Classes</li>
-				<li>Virtual or In-Person</li>
-				<li>Custom Curriculum</li>
-				<li>Train for a Competition (e.g. USACO, ACSL)</li>
-				<li>Obtain a certification (e.g. PCEP, CS50 AI, etc.)</li>
-			</ul>
 
-			<p>Consider booking 1-on-1 classes with our top-notch instructors. They can help your child reach their full potential in no time.</p>
-			<h3>Pricing</h3>
-			<p>As mentioned previously, our library classes are 100% free!</p>
-			<p>Our 1-on-1 classes cost <mark>$89/month for 1 class/week</mark>. With 4 weeks per month, that comes to <b>$22.5 per class</b>.</p>
-			<p>If you are interested in 1-on-1 classes, please <a href="mailto:codeabode101@gmail.com">contact us</a>!</p>
 
-			<h2 id="contact">Get In Touch</h2>
-			<p>We'd love to help your children bring out their true programming potential. Please <a href="/contact.html">contact us</a> for any inquiries. We will respond anywhere from 9 AM to 5 PM on weekdays.</p>
+        <p>Phone Number: 609-480-9208</p>
+        <p> &copy; Copyright DigitalReach NJ - 2025</p>
+       
+    </div>
+</footer>
 
-			<img src="space.jpg">
-		</main>
+  
+  <!-- Font Awesome CDN (place in <head> or before </body>) -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  
 
-		<br>
-		<hr>
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
 
-		<footer>
-			<address>
-				<a href="mailto:codeabode101@gmail.com">codeabode101 (at) gmail (dot) com</a><br>
-                <a href="https://www.youtube.com/@code_abode">YouTube</a><br>
-                <a href="https://github.com/codeabode101">GitHub</a><br>
-                <a href-"tel:+1-860-853-6331">+1 860-853-6331</a>
-			</address>
-			<p>&copy; 2025 codeabode LLC, <a href="attribution.html">some rights reserved.</a><br>
-Made with &#x2764; in NJ
-			</p>
-		</footer>
-	</body>
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+      });
+    });
+  </script>
+</body>
 </html>
