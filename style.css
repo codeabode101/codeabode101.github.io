@@ -119,10 +119,6 @@
     font-size: 1.5rem;
   }
 
-  .home-benefits{
-    padding-top: 10px;
-  }
-  
   /* Section styling */
   .section.full-screen {
     display: flex;
@@ -310,36 +306,10 @@
       flex: 1 1 100%;
     }
   }
-  .mission-tagline-box {
-    background: #e0e7ff; /* soft pastel blue */
-    border-left: 6px solid #3b82f6; /* bright blue accent */
-    padding: 1.8rem 2.5rem;
-    margin: 2rem auto 3rem;
-    max-width: 700px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgb(59 130 246 / 0.15);
-    text-align: center;
-  }
   
-  .tagline-primary {
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: #1e293b;
-    margin-bottom: 0.3rem;
-    letter-spacing: 0.05em;
-  }
-  
-  .tagline-secondary {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #334155;
-    line-height: 1.4;
-    letter-spacing: 0.015em;
-  }
   /* Increase spacing between major sections */
 .section {
     padding: 6rem 2rem; /* More top and bottom padding */
-    margin: 0 auto 4rem;
   }
   
   /* More space below headings */
@@ -379,23 +349,7 @@
     line-height: 1.6;
   }
   
-  /* Increase spacing inside the tagline box */
-  .mission-tagline-box {
-    padding: 2.5rem 3rem;
-    margin: 3rem auto 4rem;
-    max-width: 750px;
-  }
   
-  /* Make tagline text slightly bigger and spaced */
-  .tagline-primary {
-    font-size: 2rem;
-    margin-bottom: 0.6rem;
-  }
-  
-  .tagline-secondary {
-    font-size: 1.4rem;
-    letter-spacing: 0.02em;
-  }
   
   /* Footer spacing */
   footer {
@@ -416,7 +370,6 @@
   }
   
   .section.full-screen {
-    padding-top: calc(var(--navbar-height) + 2rem); /* existing or adjusted */
     min-height: calc(100vh - var(--navbar-height));
     height: auto; /* remove 100vh */
   }
@@ -923,34 +876,6 @@
     margin-top: 20px;
   }
   
-  .mission-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
-    margin-top: 40px;
-  }
-  
-  .card {
-    background-color: #f1f5ff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    width: 300px;
-    text-align: left;
-  }
-  
-  .card h3 {
-    color: #2563eb;
-    margin-bottom: 15px;
-  }
-  
-  .card ul {
-    list-style-type: disc;
-    padding-left: 20px;
-    color: #333;
-  }
-  
   .before-after {
     display: flex;
     flex-wrap: wrap;
@@ -1022,28 +947,6 @@
   font-weight: 400;
 }
 
-/* Benefit Points */
-.home-benefits {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-.benefit-card {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 15px 20px;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  backdrop-filter: blur(8px);
-  transition: background 0.3s;
-}
-
-.benefit-card:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
 /* CTA Button */
 .cta-button {
   display: inline-block;
@@ -1075,10 +978,6 @@
 
   .hero-subtitle {
     font-size: 1.1rem;
-  }
-
-  .benefit-card {
-    font-size: 1rem;
   }
 }
 
