@@ -1237,4 +1237,63 @@
   }
 
 
+.form-wrapper {
+  max-width: 600px;
+  margin: 2rem auto 4rem;
+  padding: 2rem;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.form-wrapper h2 {
+  margin-top: 0;
+  color: var(--primary);
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label,
+.form-group p {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="tel"],
+.form-group input[type="datetime-local"],
+.form-group textarea {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-group label > input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.submit-btn {
+  width: 100%;
+  text-align: center;
+}
+
+/* Utility to smooth-scroll to form */
+html {
+  scroll-behavior: smooth;
+}
+
+
   
