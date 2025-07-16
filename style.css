@@ -1235,4 +1235,34 @@
     margin-top: 20px;
     color: #dddddd;
   }
+.inline-field {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.inline-field label {
+  flex: 0 0 130px; /* fixed width for label */
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #334155;
+}
+
+.inline-field input[type="tel"] {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: border-color 0.3s ease;
+}
+
+.inline-field input[type="tel"]:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+}
+
   
