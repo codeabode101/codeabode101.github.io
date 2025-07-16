@@ -1115,7 +1115,7 @@
 
 .inline-phone-field label {
   white-space: nowrap;
-  margin-bottom: 0; /* override existing label bottom margin */
+  margin-bottom: 0; 
   font-weight: 600;
   font-size: 1.1rem;
   color: #334155;
