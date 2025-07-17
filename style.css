@@ -1296,16 +1296,25 @@ html {
 }
 
 
-.btn {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background-color: var(--primary);
-  color: Blue;
-  border-radius: 6px;
+.btn.signup-btn {
+  display: block;
+  padding: 12px 24px;
+  background-color: #2563eb; /* Blue background */
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
   text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.2s ease;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
 }
+
+.btn.signup-btn:hover {
+  background-color: #1e40af; /* Darker blue on hover */
+}
+
 
 
 
