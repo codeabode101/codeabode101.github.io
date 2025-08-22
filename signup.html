@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Your Free Demo Class</title>
+
+  <style>
+    :root {
+      --primary: #3366ff;
+      --bg-light: #e6f2ff;
+      --card-bg: #ffffff;
+      --text-dark: #1a1a1a;
+      --input-border: #cccccc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Manrope', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .form-wrapper {
+      width: 100%;
+      max-width: 500px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 2rem;
+    }
+
+    .form-wrapper h2 {
+      margin-top: 0;
+      color: var(--primary);
+      text-align: center;
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label,
+    .form-group p {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group input[type="tel"],
+    .form-group input[type="datetime-local"],
+    .form-group textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid var(--input-border);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .form-group label > input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      margin-top: 1rem;
+      background-color: var(--primary);
+      color: #fff;
+      text-decoration: none;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: #294bb5;
+    }
+
+    .submit-btn {
+      width: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="form-wrapper">
+    <form action="https://formspree.io/f/xeogbndr" method="POST">
+      <h2>Book Your Free Demo Class</h2>
+
+      <div class="form-group">
+        <label for="name">What's your name?</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          placeholder="Jane Doe"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="age">How old are you?</label>
+        <input
+          type="number"
+          id="age"
+          name="age"
+          required
+          min="5"
+          max="120"
+          placeholder="e.g. 14"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="parent-number">Parent/Guardian Phone Number</label>
+        <input
+          type="tel"
+          id="parent-number"
+          name="parent_number"
+          required
+          placeholder="(555) 123-4567"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="experience">Previous programming experience</label>
+        <textarea
+          id="experience"
+          name="experience"
+          rows="3"
+          placeholder="None, Scratch, Python, etc."
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <p>What do you hope to learn? <small>(check all that apply)</small></p>
+        <label><input type="checkbox" name="interests[]" value="Web Development" /> Web Development</label><br />
+        <label><input type="checkbox" name="interests[]" value="Game Development" /> Game Development</label><br />
+        <label><input type="checkbox" name="interests[]" value="Python" /> Python</label><br />
+        <label><input type="checkbox" name="interests[]" value="Java" /> Java</label><br />
+        <label><input type="checkbox" name="interests[]" value="AI Development" /> AI Development</label><br/>
+        <label><input type="checkbox" name="interests[]" value="Other" />Other</label>
+      </div>
+
+      <div class="form-group">
+        <label for="availability">When are you available for a demo class?</label>
+        <input
+          type="datetime-local"
+          id="availability"
+          name="availability"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="comments">Any additional questions or comments?</label>
+        <textarea
+          id="comments"
+          name="comments"
+          rows="3"
+          placeholder="Let us know anything else we should prepare for!"
+        ></textarea>
+      </div>
+
+      <button type="submit" class="btn submit-btn">Send Request</button>
+    </form>
+  </section>
+
+</body>
+</html>

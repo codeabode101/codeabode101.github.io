@@ -1106,6 +1106,36 @@
   }
 }
 
+.inline-phone-field {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.inline-phone-field label {
+  white-space: nowrap;
+  margin-bottom: 0; 
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #334155;
+}
+
+.inline-phone-field input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: border-color 0.3s ease;
+}
+.inline-phone-field input:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 8px rgb(59 130 246 / 0.3);
+}
+
+
 /* Animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(30px); }
@@ -1205,4 +1235,87 @@
     margin-top: 20px;
     color: #dddddd;
   }
+
+
+.form-wrapper {
+  max-width: 600px;
+  margin: 2rem auto 4rem;
+  padding: 2rem;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.form-wrapper h2 {
+  margin-top: 0;
+  color: var(--primary);
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label,
+.form-group p {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="tel"],
+.form-group input[type="datetime-local"],
+.form-group textarea {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-group label > input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.submit-btn {
+  width: 100%;
+  text-align: center;
+}
+
+/* Utility to smooth-scroll to form */
+html {
+  scroll-behavior: smooth;
+}
+
+
+.btn.signup-btn {
+  display: block;
+  padding: 12px 24px;
+  background-color: #2563eb; /* Blue background */
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn.signup-btn:hover {
+  background-color: #1e40af; /* Darker blue on hover */
+}
+
+
+
+
   
