@@ -213,73 +213,20 @@
     const form = document.getElementById('demo-signup-form');
     if (!form) return;
 
-    function getSelectedInterests() {
-      const checkboxes = form.querySelectorAll('input[name="interests[]"]:checked');
-      return Array.from(checkboxes).map(cb => cb.value);
-    }
-
-    function generateEventId() {
-      return 'lead-' + Date.now() + '-' + Math.random().toString(36).substring(2, 10);
-    }
-
-    async function sendToNetlifyCapi(payload) {
-      try {
-        const response = await fetch('/.netlify/functions/track-lead', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-        const data = await response.json().catch(() => null);
-        console.log('Netlify CAPI response:', data || response.status);
-      } catch (error) {
-        console.warn('Netlify CAPI call failed:', error);
-      }
-    }
-
-    form.addEventListener('submit', function(event) {
-      const eventId = generateEventId();
-
+    form.addEventListener('submit', function() {
       try {
         if (typeof fbq === 'function') {
           fbq('track', 'Lead', {
-            content_name: 'Free Demo Signup',
-            event_id: eventId
+            content_name: 'Free Demo Signup'
           });
-          console.log('Meta Pixel Lead event fired with event_id:', eventId);
+          console.log('Meta Pixel Lead event fired (signup form submitted)');
         } else {
           console.warn('fbq is not available when trying to fire Lead event');
         }
       } catch (e) {
         console.warn('Error firing Meta Pixel Lead event:', e);
       }
-
-      const name = form.querySelector('#name')?.value || '';
-      const age = form.querySelector('#age')?.value || '';
-      const parentNumber = form.querySelector('#parent-number')?.value || '';
-      const experience = form.querySelector('#experience')?.value || '';
-      const availability = form.querySelector('#availability')?.value || '';
-      const comments = form.querySelector('#comments')?.value || '';
-      const interests = getSelectedInterests();
-
-      const payload = {
-        eventName: 'Lead',
-        eventId,
-        formData: {
-          name,
-          age,
-          parentNumber,
-          experience,
-          availability,
-          comments,
-          interests
-        },
-        sourceUrl: window.location.href
-      };
-
-      // Fire CAPI call in the background; don't block form submission.
-      sendToNetlifyCapi(payload);
+      // Let the form submit normally to Formspree.
     });
   })();
 </script>
