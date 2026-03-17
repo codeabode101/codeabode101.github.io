@@ -44,25 +44,34 @@ export default function SiteHeader() {
     const elements = SECTION_IDS.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     if (elements.length === 0) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
-        if (visible?.target?.id && SECTION_IDS.includes(visible.target.id as SectionId)) {
-          setActiveSection(visible.target.id as SectionId);
-        }
-      },
-      {
-        root: null,
-        // Favor the section near the top, below the fixed navbar.
-        rootMargin: '-30% 0px -60% 0px',
-        threshold: [0.1, 0.2, 0.35, 0.5, 0.75]
-      }
-    );
+    let raf = 0;
 
-    for (const el of elements) observer.observe(el);
-    return () => observer.disconnect();
+    const update = () => {
+      raf = 0;
+      const navbarHeight = 56; // matches --navbar-height in public/style.css
+      const y = window.scrollY + navbarHeight + 8;
+
+      let current: SectionId = 'home';
+      for (const el of elements) {
+        if (el.offsetTop <= y) current = el.id as SectionId;
+      }
+      setActiveSection(current);
+    };
+
+    const onScroll = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(update);
+    };
+
+    // Initial + after hash navigation.
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('hashchange', update);
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('hashchange', update);
+    };
   }, [pathname]);
 
   return (
