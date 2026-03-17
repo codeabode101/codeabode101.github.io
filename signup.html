@@ -213,19 +213,59 @@
     const form = document.getElementById('demo-signup-form');
     if (!form) return;
 
+    function generateEventId() {
+      return 'lead-' + Date.now() + '-' + Math.random().toString(36).substring(2, 10);
+    }
+
+    function sendCapiLead(payload) {
+      try {
+        const body = JSON.stringify(payload);
+
+        if (navigator.sendBeacon) {
+          const blob = new Blob([body], { type: 'application/json' });
+          const ok = navigator.sendBeacon('/.netlify/functions/track-lead', blob);
+          if (ok) return;
+        }
+
+        // Fallback for browsers without sendBeacon
+        fetch('/.netlify/functions/track-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body,
+          keepalive: true
+        }).catch(() => {});
+      } catch (_) {
+        // Ignore any tracking errors.
+      }
+    }
+
     form.addEventListener('submit', function() {
+      const eventId = generateEventId();
+
       try {
         if (typeof fbq === 'function') {
           fbq('track', 'Lead', {
-            content_name: 'Free Demo Signup'
+            content_name: 'Free Demo Signup',
+            event_id: eventId
           });
-          console.log('Meta Pixel Lead event fired (signup form submitted)');
+          console.log('Meta Pixel Lead event fired (signup form submitted), event_id:', eventId);
         } else {
           console.warn('fbq is not available when trying to fire Lead event');
         }
       } catch (e) {
         console.warn('Error firing Meta Pixel Lead event:', e);
       }
+
+      const parentNumber = form.querySelector('#parent-number')?.value || '';
+      sendCapiLead({
+        eventName: 'Lead',
+        eventId,
+        sourceUrl: window.location.href,
+        formData: {
+          parentNumber
+        }
+      });
+
       // Let the form submit normally to Formspree.
     });
   })();
