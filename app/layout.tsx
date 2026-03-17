@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import './globals.css';
 import PixelPageView from './pixel-pageview';
+import SiteHeader from './site-header';
 
 export const metadata = {
   title: 'CodeAbode'
@@ -48,6 +49,7 @@ fbq('track', 'PageView');
       </head>
       <body>
         <PixelPageView />
+        <SiteHeader />
         {children}
       </body>
     </html>

@@ -19,9 +19,6 @@ export default function SignupPage() {
     <main
       style={{
         minHeight: '100vh',
-        // public/style.css adds `body { padding-top: var(--navbar-height) }` for the fixed navbar on `/`.
-        // `/signup` has no navbar, so we cancel that global offset here.
-        marginTop: 'calc(-1 * var(--navbar-height))',
         padding: '1rem',
         display: 'flex',
         alignItems: 'center',

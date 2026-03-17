@@ -16,3 +16,8 @@ body {
   color: var(--text-dark);
 }
 
+/* Active nav link highlight (works with existing style.css navbar) */
+.nav-links a.active {
+  color: #3b82f6;
+}
+

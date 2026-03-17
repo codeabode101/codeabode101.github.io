@@ -1,41 +1,6 @@
-import Script from 'next/script';
-
 export default function HomePage() {
   return (
     <>
-      {/* Font Awesome (used by footer icons in legacy markup) */}
-      <Script src="https://kit.fontawesome.com/a076d05399.js" crossOrigin="anonymous" />
-
-      <header>
-        <nav className="navbar">
-          <div className="logo">
-            <a href="#home">CodeAbode</a>
-          </div>
-          <div className="hamburger" id="hamburger">
-            <div className="bar"></div>
-            <div className="bar"></div>
-            <div className="bar"></div>
-          </div>
-          <ul className="nav-links" id="navLinks">
-            <li>
-              <a href="#home">Home</a>
-            </li>
-            <li>
-              <a href="#curriculum">Curriculum</a>
-            </li>
-            <li>
-              <a href="#pricing">Pricing</a>
-            </li>
-            <li>
-              <a href="#contact">Contact</a>
-            </li>
-            <li>
-              <a href="#team">Team</a>
-            </li>
-          </ul>
-        </nav>
-      </header>
-
       <section id="home" className="hero">
         <div className="hero-overlay">
           <div className="hero-content">
@@ -244,28 +209,6 @@ export default function HomePage() {
           <p> © Copyright DigitalReach NJ - 2025</p>
         </div>
       </footer>
-
-      <Script
-        id="hamburger-script"
-        dangerouslySetInnerHTML={{
-          __html: `
-const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('navLinks');
-
-if (hamburger && navLinks) {
-  hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-  });
-
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('active');
-    });
-  });
-}
-          `.trim()
-        }}
-      />
     </>
   );
 }
