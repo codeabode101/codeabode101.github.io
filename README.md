@@ -1,11 +1,10 @@
 # codeabode
 
-Static site deployed on Netlify (recommended) so we can use Netlify Functions for Meta Conversions API.
+Next.js (App Router) site deployed on Netlify so we can use server routes for Meta Conversions API.
 
 ## Netlify setup
 
-- **Publish directory**: repo root (`.`)
-- **Functions directory**: `netlify/functions` (configured in `netlify.toml`)
+- Netlify will run `npm run build` and use `@netlify/plugin-nextjs` (configured in `netlify.toml`).
 
 ### Required environment variables (Netlify → Site settings → Environment variables)
 
@@ -18,6 +17,6 @@ Optional:
 
 ## Events implemented
 
-- **Client-side Pixel**: `PageView` on load, `Lead` on `signup.html` form submit
-- **Server-side (CAPI)**: `Lead` via `/.netlify/functions/track-lead` (deduplicated with shared `event_id`)
+- **Client-side Pixel**: `PageView` (initial + SPA route changes), `Lead` on `/signup` form submit
+- **Server-side (CAPI)**: `Lead` via `POST /api/track-lead` (deduplicated with shared `event_id`)
 
