@@ -48,7 +48,11 @@ export default function SiteHeader() {
 
     const update = () => {
       raf = 0;
-      const navbarHeight = 56; // matches --navbar-height in public/style.css
+      const cssNavbarHeight = Number.parseInt(
+        getComputedStyle(document.documentElement).getPropertyValue('--navbar-height'),
+        10
+      );
+      const navbarHeight = Number.isFinite(cssNavbarHeight) ? cssNavbarHeight : 56;
       const y = window.scrollY + navbarHeight + 8;
 
       let current: SectionId = 'home';
@@ -66,11 +70,15 @@ export default function SiteHeader() {
     // Initial + after hash navigation.
     update();
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('hashchange', update);
+    const onHashChange = () => {
+      // Hash navigation can fire before the browser finishes scrolling.
+      window.requestAnimationFrame(() => window.requestAnimationFrame(update));
+    };
+    window.addEventListener('hashchange', onHashChange);
     return () => {
       if (raf) window.cancelAnimationFrame(raf);
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('hashchange', update);
+      window.removeEventListener('hashchange', onHashChange);
     };
   }, [pathname]);
 
@@ -99,7 +107,10 @@ export default function SiteHeader() {
               <Link
                 href={l.href}
                 className={pathname === '/' && activeSection === l.id ? 'active' : undefined}
-                onClick={() => setMenuOpen(false)}
+                onClick={() => {
+                  setMenuOpen(false);
+                  if (pathname === '/') setActiveSection(l.id);
+                }}
               >
                 {l.label}
               </Link>
