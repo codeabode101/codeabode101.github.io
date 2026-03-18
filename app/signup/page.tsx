@@ -1,7 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
-
 declare global {
   interface Window {
     fbq?: (...args: any[]) => void;
@@ -13,31 +11,12 @@ function generateEventId() {
 }
 
 export default function SignupPage() {
-  const formAction = useMemo(() => 'https://formspree.io/f/xeogbndr', []);
-
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        padding: '1rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'var(--bg-light)'
-      }}
-    >
-      <section
-        style={{
-          width: '100%',
-          maxWidth: 500,
-          background: 'var(--card-bg)',
-          borderRadius: 12,
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-          padding: '2rem'
-        }}
-      >
+    <main className="signup-page-bg">
+      <section className="signup-form-wrapper">
         <form
-          action={formAction}
+          id="demo-signup-form"
+          action="https://formspree.io/f/xeogbndr"
           method="POST"
           onSubmit={(e) => {
             const eventId = generateEventId();
@@ -46,136 +25,84 @@ export default function SignupPage() {
               if (typeof window.fbq === 'function') {
                 window.fbq('track', 'Lead', {
                   content_name: 'Free Demo Signup',
-                  event_id: eventId
+                  event_id: eventId,
                 });
+                console.log('Meta Pixel Lead event fired (signup form submitted), event_id:', eventId);
+              } else {
+                console.warn('fbq is not available when trying to fire Lead event');
               }
-            } catch (_) {}
+            } catch (err) {
+              console.warn('Error firing Meta Pixel Lead event:', err);
+            }
 
-            const parentNumber = (e.currentTarget.elements.namedItem('parent_number') as HTMLInputElement | null)
-              ?.value;
+            const parentNumber =
+              (e.currentTarget.elements.namedItem('parent_number') as HTMLInputElement | null)?.value || '';
 
-            // Fire server-side event without blocking submit.
+            const body = JSON.stringify({
+              eventName: 'Lead',
+              eventId,
+              sourceUrl: window.location.href,
+              formData: { parentNumber },
+            });
+
             try {
-              const body = JSON.stringify({
-                eventName: 'Lead',
-                eventId,
-                sourceUrl: window.location.href,
-                formData: { parentNumber }
-              });
-
               if (navigator.sendBeacon) {
-                navigator.sendBeacon('/api/track-lead', new Blob([body], { type: 'application/json' }));
+                const ok = navigator.sendBeacon('/api/track-lead', new Blob([body], { type: 'application/json' }));
+                if (!ok) throw new Error('sendBeacon failed');
               } else {
                 fetch('/api/track-lead', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body,
-                  keepalive: true
+                  keepalive: true,
                 }).catch(() => {});
               }
             } catch (_) {}
           }}
         >
-          <h2 style={{ marginTop: 0, color: 'var(--primary)', textAlign: 'center', fontSize: '1.75rem' }}>
-            Book Your Free Demo Class
-          </h2>
+          <h2 className="signup-form-title">Book Your Free Demo Class</h2>
 
-          <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'block', marginBottom: 8, fontWeight: 500 }}>
-              What's your name?
-              <input
-                type="text"
-                name="name"
-                required
-                placeholder="Jane Doe"
-                style={{
-                  width: '100%',
-                  marginTop: 8,
-                  padding: '0.6rem',
-                  border: '1px solid var(--input-border)',
-                  borderRadius: 6,
-                  fontSize: '1rem'
-                }}
-              />
-            </label>
+          <div className="signup-form-group">
+            <label htmlFor="name">What&apos;s your name?</label>
+            <input type="text" id="name" name="name" required placeholder="Jane Doe" />
           </div>
 
-          <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'block', marginBottom: 8, fontWeight: 500 }}>
-              How old are you?
-              <input
-                type="number"
-                name="age"
-                required
-                min={5}
-                max={120}
-                placeholder="e.g. 14"
-                style={{
-                  width: '100%',
-                  marginTop: 8,
-                  padding: '0.6rem',
-                  border: '1px solid var(--input-border)',
-                  borderRadius: 6,
-                  fontSize: '1rem'
-                }}
-              />
-            </label>
+          <div className="signup-form-group">
+            <label htmlFor="age">How old are you?</label>
+            <input type="number" id="age" name="age" required min={5} max={120} placeholder="e.g. 14" />
           </div>
 
-          <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'block', marginBottom: 8, fontWeight: 500 }}>
-              Parent/Guardian Phone Number
-              <input
-                type="tel"
-                name="parent_number"
-                required
-                placeholder="(555) 123-4567"
-                style={{
-                  width: '100%',
-                  marginTop: 8,
-                  padding: '0.6rem',
-                  border: '1px solid var(--input-border)',
-                  borderRadius: 6,
-                  fontSize: '1rem'
-                }}
-              />
-            </label>
+          <div className="signup-form-group">
+            <label htmlFor="parent-number">Parent/Guardian Phone Number</label>
+            <input type="tel" id="parent-number" name="parent_number" required placeholder="(555) 123-4567" />
           </div>
 
-          <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'block', marginBottom: 8, fontWeight: 500 }}>
-              Previous programming experience
-              <textarea
-                name="experience"
-                rows={3}
-                placeholder="None, Scratch, Python, etc."
-                style={{
-                  width: '100%',
-                  marginTop: 8,
-                  padding: '0.6rem',
-                  border: '1px solid var(--input-border)',
-                  borderRadius: 6,
-                  fontSize: '1rem'
-                }}
-              ></textarea>
-            </label>
+          <div className="signup-form-group">
+            <label htmlFor="experience">Previous programming experience</label>
+            <textarea id="experience" name="experience" rows={3} placeholder="None, Scratch, Python, etc." />
           </div>
 
-          <button
-            type="submit"
-            style={{
-              width: '100%',
-              display: 'inline-block',
-              padding: '0.75rem 1.5rem',
-              marginTop: '1rem',
-              backgroundColor: 'var(--primary)',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 6,
-              fontWeight: 700,
-              cursor: 'pointer'
-            }}
-          >
+          <div className="signup-form-group">
+            <p>What do you hope to learn? <small>(check all that apply)</small></p>
+            <label><input type="checkbox" name="interests[]" value="Web Development" /> Web Development</label><br />
+            <label><input type="checkbox" name="interests[]" value="Game Development" /> Game Development</label><br />
+            <label><input type="checkbox" name="interests[]" value="Python" /> Python</label><br />
+            <label><input type="checkbox" name="interests[]" value="Java" /> Java</label><br />
+            <label><input type="checkbox" name="interests[]" value="AI Development" /> AI Development</label><br />
+            <label><input type="checkbox" name="interests[]" value="Other" /> Other</label>
+          </div>
+
+          <div className="signup-form-group">
+            <label htmlFor="availability">When are you available for a demo class?</label>
+            <input type="datetime-local" id="availability" name="availability" required />
+          </div>
+
+          <div className="signup-form-group">
+            <label htmlFor="comments">Any additional questions or comments?</label>
+            <textarea id="comments" name="comments" rows={3} placeholder="Let us know anything else we should prepare for!" />
+          </div>
+
+          <button type="submit" className="signup-submit-btn">
             Send Request
           </button>
         </form>
@@ -183,4 +110,3 @@ export default function SignupPage() {
     </main>
   );
 }
-

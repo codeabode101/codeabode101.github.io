@@ -55,9 +55,18 @@ export default function SiteHeader() {
       const navbarHeight = Number.isFinite(cssNavbarHeight) ? cssNavbarHeight : 56;
       const y = window.scrollY + navbarHeight + 8;
 
+      const isAtBottom = Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 10;
+      if (isAtBottom && elements.length > 0) {
+        setActiveSection(elements[elements.length - 1].id as SectionId);
+        return;
+      }
+
       let current: SectionId = 'home';
       for (const el of elements) {
-        if (el.offsetTop <= y) current = el.id as SectionId;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= window.innerHeight / 2) {
+          current = el.id as SectionId;
+        }
       }
       setActiveSection(current);
     };
@@ -85,45 +94,49 @@ export default function SiteHeader() {
   return (
     <header>
       <nav className="navbar">
-        <div className="logo">
-          <Link href="/#home">CodeAbode</Link>
-        </div>
+        <div className="navbar-content">
+          <div className="logo">
+            <Link href="/#home">CodeAbode</Link>
+          </div>
 
-        <button
-          type="button"
-          className="hamburger"
-          aria-label="Toggle navigation menu"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-        </button>
+          <button
+            type="button"
+            className="hamburger"
+            aria-label="Toggle navigation menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <div className="bar"></div>
+            <div className="bar"></div>
+            <div className="bar"></div>
+          </button>
 
-        <ul className={`nav-links${menuOpen ? ' active' : ''}`}>
-          {links.map((l) => (
-            <li key={l.id}>
-              <Link
-                href={l.href}
-                className={pathname === '/' && activeSection === l.id ? 'active' : undefined}
-                onClick={() => {
-                  setMenuOpen(false);
-                  if (pathname === '/') setActiveSection(l.id);
-                }}
-              >
-                {l.label}
-              </Link>
-            </li>
-          ))}
-          {pathname === '/signup' ? (
+          <ul className={`nav-links${menuOpen ? ' active' : ''}`}>
+            {links.map((l) => (
+              <li key={l.id}>
+                <Link
+                  href={l.href}
+                  className={pathname === '/' && activeSection === l.id ? 'active' : undefined}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    if (pathname === '/') setActiveSection(l.id);
+                  }}
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
             <li>
-              <Link href="/#home" className="active">
-                Back
+              <Link 
+                href="/signup" 
+                className="cta-button"
+                onClick={() => setMenuOpen(false)}
+              >
+                Book a Demo
               </Link>
             </li>
-          ) : null}
-        </ul>
+          </ul>
+        </div>
       </nav>
     </header>
   );

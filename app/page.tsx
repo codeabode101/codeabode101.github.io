@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function HomePage() {
   return (
     <>
@@ -11,12 +13,12 @@ export default function HomePage() {
             </p>
 
             <div className="cta-container">
-              <a href="/signup" className="cta-button primary">
+              <Link href="/signup" className="cta-button primary">
                 Book a Demo
-              </a>
-              <a href="#curriculum" className="cta-button secondary">
+              </Link>
+              <Link href="#curriculum" className="cta-button secondary">
                 View Curriculum
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -141,9 +143,9 @@ export default function HomePage() {
           </p>
 
           <p>
-            <a href="/signup" className="btn signup-btn">
+            <Link href="/signup" className="btn signup-btn">
               Book Your Free Demo
-            </a>
+            </Link>
           </p>
         </div>
       </section>
