@@ -1,12 +1,18 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xeogbndr';
+
 function sha256(value: string) {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
 
 function normalizePhone(phone: string) {
   return String(phone || '').replace(/[^\d]/g, '');
+}
+
+function normalizeEmail(email: string) {
+  return String(email || '').toLowerCase().trim();
 }
 
 export async function POST(request: Request) {
@@ -21,56 +27,94 @@ export async function POST(request: Request) {
     );
   }
 
-  let payload: any;
+  let formData: Record<string, any>;
   try {
-    payload = await request.json();
+    formData = await request.json();
   } catch {
     return NextResponse.json({ ok: false, error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  if ((payload?.eventName || 'Lead') !== 'Lead') {
-    return NextResponse.json({ ok: false, error: 'Unsupported eventName' }, { status: 400 });
+  const {
+    name,
+    age,
+    parent_number,
+    experience,
+    interests,
+    availability,
+    comments,
+    email,
+    sourceUrl
+  } = formData;
+
+  const phone = normalizePhone(parent_number || '');
+  const emailClean = normalizeEmail(email || '');
+
+  // Build Facebook user_data with available info
+  const user_data: Record<string, any> = {};
+  if (phone) user_data.ph = [sha256(phone)];
+  if (emailClean) user_data.em = [sha256(emailClean)];
+
+  if (Object.keys(user_data).length === 0) {
+    return NextResponse.json({ ok: false, error: 'Missing phone or email for user_data' }, { status: 400 });
   }
 
-  const eventId = String(payload?.eventId || '');
-  const sourceUrl = String(payload?.sourceUrl || '');
-  const parentNumber = normalizePhone(String(payload?.formData?.parentNumber || ''));
+  const eventId = `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
 
-  if (!parentNumber) {
-    return NextResponse.json({ ok: false, error: 'Missing phone for user_data' }, { status: 400 });
-  }
-
-  const user_data: Record<string, any> = {
-    ph: [sha256(parentNumber)]
-  };
-
-  const body: Record<string, any> = {
+  // Send to Facebook CAPI
+  const facebookBody: Record<string, any> = {
     data: [
       {
         event_name: 'Lead',
         event_time: Math.floor(Date.now() / 1000),
-        event_id: eventId || undefined,
-        event_source_url: sourceUrl || undefined,
+        event_id: eventId,
+        event_source_url: sourceUrl || '',
         action_source: 'website',
         user_data,
-        custom_data: { content_name: 'Free Demo Signup' }
+        custom_data: {
+          content_name: 'Free Demo Signup',
+          age: age ? String(age) : undefined,
+          experience: experience || undefined
+        }
       }
     ]
   };
 
-  if (testEventCode) body.test_event_code = testEventCode;
+  if (testEventCode) facebookBody.test_event_code = testEventCode;
 
-  const url = `https://graph.facebook.com/v18.0/${encodeURIComponent(pixelId)}/events?access_token=${encodeURIComponent(accessToken)}`;
-  const metaResponse = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+  const facebookUrl = `https://graph.facebook.com/v18.0/${encodeURIComponent(pixelId)}/events?access_token=${encodeURIComponent(accessToken)}`;
+
+  // Run Facebook CAPI and Formspree in parallel
+  const [facebookResponse, formspreeResponse] = await Promise.allSettled([
+    fetch(facebookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(facebookBody)
+    }).then(r => r.json().catch(() => null)),
+    fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    }).then(r => r.json().catch(() => null))
+  ]);
+
+  const facebookOk = facebookResponse.status === 'fulfilled';
+  const formspreeOk = formspreeResponse.status === 'fulfilled' && formspreeResponse.value?.success !== false;
+
+  if (!formspreeOk) {
+    return NextResponse.json(
+      { ok: false, error: 'Form submission failed', meta: facebookOk ? facebookResponse.value : null },
+      { status: 502 }
+    );
+  }
+
+  return NextResponse.json({
+    ok: true,
+    eventId,
+    facebook: facebookOk ? facebookResponse.value : null,
+    facebookOk
   });
-
-  const metaJson = await metaResponse.json().catch(() => null);
-  return NextResponse.json(
-    { ok: metaResponse.ok, status: metaResponse.status, meta: metaJson },
-    { status: metaResponse.ok ? 200 : 400 }
-  );
 }
 

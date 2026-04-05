@@ -17,6 +17,31 @@ Optional:
 
 ## Events implemented
 
-- **Client-side Pixel**: `PageView` (initial + SPA route changes), `Lead` on `/signup` form submit
-- **Server-side (CAPI)**: `Lead` via `POST /api/track-lead` (deduplicated with shared `event_id`)
+### Server-side Conversions API (CAPI)
+- **`PageView`**: Fires automatically for **every page request** via `middleware.ts` (runs on the server before the page renders)
+- **`Lead`**: Fires when form submits to `/api/track-lead` (server proxies to Formspree + Facebook CAPI)
+
+### How it works
+
+1. User requests **any page** → `middleware.ts` fires CAPI `PageView` automatically
+2. User submits signup form → `/api/track-lead` sends to Facebook CAPI **and** Formspree in parallel
+3. On success, user redirects to `/thank-you` (middleware fires another `PageView`)
+
+The `/api/track-lead` endpoint accepts all form fields:
+```json
+{
+  "name": "Jane Doe",
+  "age": "14",
+  "parent_number": "5551234567",
+  "experience": "None",
+  "interests[]": ["Python", "Web Development"],
+  "availability": "2024-01-15T10:00",
+  "comments": "Excited to learn!",
+  "email": "parent@email.com",
+  "sourceUrl": "https://yoursite.com/signup"
+}
+```
+
+### Deduplication
+Each submission generates a unique `event_id` used for both client and server tracking. Facebook automatically deduplicates events with matching IDs.
 

@@ -1,112 +1,267 @@
-'use client';
-
-declare global {
-  interface Window {
-    fbq?: (...args: any[]) => void;
-  }
-}
-
-function generateEventId() {
-  return 'lead-' + Date.now() + '-' + Math.random().toString(36).substring(2, 10);
-}
-
 export default function SignupPage() {
   return (
-    <main className="signup-page-bg">
-      <section className="signup-form-wrapper">
-        <form
-          id="demo-signup-form"
-          action="https://formspree.io/f/xeogbndr"
-          method="POST"
-          onSubmit={(e) => {
-            const eventId = generateEventId();
+    <>
+      {/* Client-side Pixel for browser tracking */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '2333941467103459');
+            fbq('track', 'PageView');
+          `
+        }}
+      />
+      <noscript>
+        <img
+          height="1"
+          width="1"
+          style={{ display: 'none' }}
+          src="https://www.facebook.com/tr?id=2333941467103459&ev=PageView&noscript=1"
+        />
+      </noscript>
 
-            try {
-              if (typeof window.fbq === 'function') {
-                window.fbq('track', 'Lead', {
-                  content_name: 'Free Demo Signup',
-                  event_id: eventId,
-                });
-                console.log('Meta Pixel Lead event fired (signup form submitted), event_id:', eventId);
-              } else {
-                console.warn('fbq is not available when trying to fire Lead event');
-              }
-            } catch (err) {
-              console.warn('Error firing Meta Pixel Lead event:', err);
-            }
+      <style>{`
+        :root {
+          --primary: #3366ff;
+          --bg-light: #e6f2ff;
+          --card-bg: #ffffff;
+          --text-dark: #1a1a1a;
+          --input-border: #cccccc;
+        }
 
-            const parentNumber =
-              (e.currentTarget.elements.namedItem('parent_number') as HTMLInputElement | null)?.value || '';
+        * {
+          box-sizing: border-box;
+        }
 
-            const body = JSON.stringify({
-              eventName: 'Lead',
-              eventId,
-              sourceUrl: window.location.href,
-              formData: { parentNumber },
-            });
+        body {
+          margin: 0;
+          font-family: 'Manrope', sans-serif;
+          background-color: var(--bg-light);
+          color: var(--text-dark);
+          line-height: 1.4;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+          padding: 1rem;
+        }
 
-            try {
-              if (navigator.sendBeacon) {
-                const ok = navigator.sendBeacon('/api/track-lead', new Blob([body], { type: 'application/json' }));
-                if (!ok) throw new Error('sendBeacon failed');
-              } else {
-                fetch('/api/track-lead', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body,
-                  keepalive: true,
-                }).catch(() => {});
-              }
-            } catch (_) {}
-          }}
-        >
-          <h2 className="signup-form-title">Book Your Free Demo Class</h2>
+        .form-wrapper {
+          width: 100%;
+          max-width: 500px;
+          background: var(--card-bg);
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          padding: 2rem;
+        }
 
-          <div className="signup-form-group">
+        .form-wrapper h2 {
+          margin-top: 0;
+          color: var(--primary);
+          text-align: center;
+          font-size: 1.75rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+          margin-bottom: 1.25rem;
+        }
+
+        .form-group label,
+        .form-group p {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="tel"],
+        .form-group input[type="datetime-local"],
+        .form-group textarea {
+          width: 100%;
+          padding: 0.6rem;
+          border: 1px solid var(--input-border);
+          border-radius: 6px;
+          font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+          outline: none;
+          border-color: var(--primary);
+        }
+
+        .form-group label > input[type="checkbox"] {
+          margin-right: 0.5rem;
+        }
+
+        .btn {
+          display: inline-block;
+          padding: 0.75rem 1.5rem;
+          margin-top: 1rem;
+          background-color: var(--primary);
+          color: #fff;
+          text-decoration: none;
+          border: none;
+          border-radius: 6px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+        }
+
+        .btn:hover {
+          background-color: #294bb5;
+        }
+
+        .submit-btn {
+          width: 100%;
+          text-align: center;
+        }
+      `}</style>
+
+      <div className="form-wrapper">
+        <form id="demo-signup-form">
+          <h2>Book Your Free Demo Class</h2>
+
+          <div className="form-group">
             <label htmlFor="name">What&apos;s your name?</label>
-            <input type="text" id="name" name="name" required placeholder="Jane Doe" />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="Jane Doe"
+            />
           </div>
 
-          <div className="signup-form-group">
+          <div className="form-group">
             <label htmlFor="age">How old are you?</label>
-            <input type="number" id="age" name="age" required min={5} max={120} placeholder="e.g. 14" />
+            <input
+              type="number"
+              id="age"
+              name="age"
+              required
+              min="5"
+              max="120"
+              placeholder="e.g. 14"
+            />
           </div>
 
-          <div className="signup-form-group">
+          <div className="form-group">
             <label htmlFor="parent-number">Parent/Guardian Phone Number</label>
-            <input type="tel" id="parent-number" name="parent_number" required placeholder="(555) 123-4567" />
+            <input
+              type="tel"
+              id="parent-number"
+              name="parent_number"
+              required
+              placeholder="(555) 123-4567"
+            />
           </div>
 
-          <div className="signup-form-group">
+          <div className="form-group">
             <label htmlFor="experience">Previous programming experience</label>
-            <textarea id="experience" name="experience" rows={3} placeholder="None, Scratch, Python, etc." />
+            <textarea
+              id="experience"
+              name="experience"
+              rows={3}
+              placeholder="None, Scratch, Python, etc."
+            />
           </div>
 
-          <div className="signup-form-group">
+          <div className="form-group">
             <p>What do you hope to learn? <small>(check all that apply)</small></p>
             <label><input type="checkbox" name="interests[]" value="Web Development" /> Web Development</label><br />
             <label><input type="checkbox" name="interests[]" value="Game Development" /> Game Development</label><br />
             <label><input type="checkbox" name="interests[]" value="Python" /> Python</label><br />
             <label><input type="checkbox" name="interests[]" value="Java" /> Java</label><br />
-            <label><input type="checkbox" name="interests[]" value="AI Development" /> AI Development</label><br />
-            <label><input type="checkbox" name="interests[]" value="Other" /> Other</label>
+            <label><input type="checkbox" name="interests[]" value="AI Development" /> AI Development</label><br/>
+            <label><input type="checkbox" name="interests[]" value="Other" />Other</label>
           </div>
 
-          <div className="signup-form-group">
+          <div className="form-group">
             <label htmlFor="availability">When are you available for a demo class?</label>
-            <input type="datetime-local" id="availability" name="availability" required />
+            <input
+              type="datetime-local"
+              id="availability"
+              name="availability"
+              required
+            />
           </div>
 
-          <div className="signup-form-group">
+          <div className="form-group">
             <label htmlFor="comments">Any additional questions or comments?</label>
-            <textarea id="comments" name="comments" rows={3} placeholder="Let us know anything else we should prepare for!" />
+            <textarea
+              id="comments"
+              name="comments"
+              rows={3}
+              placeholder="Let us know anything else we should prepare for!"
+            />
           </div>
 
-          <button type="submit" className="signup-submit-btn">
-            Send Request
-          </button>
+          <button type="submit" className="btn submit-btn">Send Request</button>
         </form>
-      </section>
-    </main>
+      </div>
+
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              const form = document.getElementById('demo-signup-form');
+              if (!form) return;
+
+              form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const submitBtn = form.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Submitting...';
+                submitBtn.disabled = true;
+
+                try {
+                  const formData = new FormData(form);
+                  const data = {};
+                  formData.forEach((value, key) => {
+                    if (data[key]) {
+                      if (!Array.isArray(data[key])) data[key] = [data[key]];
+                      data[key].push(value);
+                    } else {
+                      data[key] = value;
+                    }
+                  });
+
+                  const response = await fetch('/api/track-lead', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                  });
+
+                  const result = await response.json();
+
+                  if (result.ok) {
+                    window.location.href = '/thank-you';
+                  } else {
+                    alert('Something went wrong. Please try again.');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                  }
+                } catch (error) {
+                  alert('Network error. Please check your connection and try again.');
+                  submitBtn.textContent = originalText;
+                  submitBtn.disabled = false;
+                }
+              });
+            })();
+          `
+        }}
+      />
+    </>
   );
 }
