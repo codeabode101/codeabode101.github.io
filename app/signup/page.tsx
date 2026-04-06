@@ -12,6 +12,7 @@ const CONTACT_OPTIONS = [
 
 export default function SignupPage() {
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -39,7 +40,7 @@ export default function SignupPage() {
       const result = await response.json();
 
       if (result.ok) {
-        window.location.href = '/thank-you';
+        setSubmitted(true);
       } else {
         alert('Something went wrong. Please try again.');
         setSubmitting(false);
@@ -48,6 +49,26 @@ export default function SignupPage() {
       alert('Network error. Please check your connection and try again.');
       setSubmitting(false);
     }
+  }
+
+  if (submitted) {
+    return (
+      <div className="form-wrapper" style={{ textAlign: 'center' }}>
+        <h2 style={{ color: '#3366ff' }}>Thank You!</h2>
+        <p style={{ color: '#1a1a1a', marginBottom: '1rem' }}>
+          Your request has been received. We&apos;ll be in touch soon.
+        </p>
+        <button
+          className="btn"
+          onClick={() => {
+            setSubmitted(false);
+            setSubmitting(false);
+          }}
+        >
+          Submit Another
+        </button>
+      </div>
+    );
   }
 
   return (
