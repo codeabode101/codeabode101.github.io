@@ -4,7 +4,7 @@
   "description": "Next.js site deployed on Cloudflare Workers with Meta Conversions API.",
   "main": "index.js",
   "scripts": {
-    "build": "opennextjs-cloudflare build",
+    "build": "next build",
     "cf-build": "opennextjs-cloudflare build",
     "cf-deploy": "opennextjs-cloudflare deploy",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
@@ -42,5 +42,9 @@
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
     "wrangler": "^4.80.0"
+  },
+  "overrides": {
+    "glob": "^13.0.0",
+    "node-domexception": "^2.0.0"
   }
 }
