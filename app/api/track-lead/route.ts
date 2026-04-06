@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/codeabode101@gmail.com';
+const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/rahejaom@outlook.com';
 
 function sha256(value: string) {
   return crypto.createHash('sha256').update(value).digest('hex');
@@ -38,11 +38,8 @@ export async function POST(request: Request) {
     name,
     age,
     parent_number,
-    experience,
-    interests,
-    availability,
-    comments,
-    email,
+    message,
+    contact,
     sourceUrl
   } = formData;
 
@@ -72,8 +69,7 @@ export async function POST(request: Request) {
         user_data,
         custom_data: {
           content_name: 'Free Demo Signup',
-          age: age ? String(age) : undefined,
-          experience: experience || undefined
+          age: age ? String(age) : undefined
         }
       }
     ]

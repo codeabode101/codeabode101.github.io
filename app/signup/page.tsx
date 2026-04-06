@@ -1,6 +1,14 @@
 'use client';
 
-import { useEffect, useState, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
+
+const CONTACT_OPTIONS = [
+  { value: 'call', label: 'Phone Call' },
+  { value: 'text', label: 'Text (SMS)' },
+  { value: 'whatsapp_call', label: 'WhatsApp Call' },
+  { value: 'whatsapp_text', label: 'WhatsApp Text' },
+  { value: 'messenger', label: 'Facebook Messenger' }
+];
 
 export default function SignupPage() {
   const [submitting, setSubmitting] = useState(false);
@@ -127,7 +135,6 @@ export default function SignupPage() {
         .form-group input[type="text"],
         .form-group input[type="number"],
         .form-group input[type="tel"],
-        .form-group input[type="datetime-local"],
         .form-group textarea {
           width: 100%;
           padding: 0.6rem;
@@ -144,6 +151,20 @@ export default function SignupPage() {
 
         .form-group label > input[type="checkbox"] {
           margin-right: 0.5rem;
+        }
+
+        .contact-options {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem 1rem;
+        }
+
+        .contact-options label {
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+          font-weight: 400;
+          cursor: pointer;
         }
 
         .btn {
@@ -186,7 +207,7 @@ export default function SignupPage() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="age">How old are you?</label>
+            <label htmlFor="age">Student Age</label>
             <input
               type="number"
               id="age"
@@ -210,43 +231,25 @@ export default function SignupPage() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="experience">Previous programming experience</label>
+            <label htmlFor="message">How can we help your child?</label>
             <textarea
-              id="experience"
-              name="experience"
-              rows={3}
-              placeholder="None, Scratch, Python, etc."
+              id="message"
+              name="message"
+              rows={4}
+              placeholder="Tell us about your child's goals and needs..."
             />
           </div>
 
           <div className="form-group">
-            <p>What do you hope to learn? <small>(check all that apply)</small></p>
-            <label><input type="checkbox" name="interests[]" value="Web Development" /> Web Development</label><br />
-            <label><input type="checkbox" name="interests[]" value="Game Development" /> Game Development</label><br />
-            <label><input type="checkbox" name="interests[]" value="Python" /> Python</label><br />
-            <label><input type="checkbox" name="interests[]" value="Java" /> Java</label><br />
-            <label><input type="checkbox" name="interests[]" value="AI Development" /> AI Development</label><br/>
-            <label><input type="checkbox" name="interests[]" value="Other" />Other</label>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="availability">When are you available for a demo class?</label>
-            <input
-              type="datetime-local"
-              id="availability"
-              name="availability"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="comments">Any additional questions or comments?</label>
-            <textarea
-              id="comments"
-              name="comments"
-              rows={3}
-              placeholder="Let us know anything else we should prepare for!"
-            />
+            <p>Preferred Contact Method <small>(check all that apply)</small></p>
+            <div className="contact-options">
+              {CONTACT_OPTIONS.map(opt => (
+                <label key={opt.value}>
+                  <input type="checkbox" name="contact[]" value={opt.value} />
+                  {opt.label}
+                </label>
+              ))}
+            </div>
           </div>
 
           <button type="submit" className="btn submit-btn" disabled={submitting}>
