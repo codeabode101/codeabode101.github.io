@@ -87,15 +87,18 @@ export async function POST(request: Request) {
         'Accept': 'application/json'
       },
       body: JSON.stringify(formData)
-    }).then(r => r.json().catch(() => null))
+    }).then(async r => {
+      const text = await r.text();
+      try { return JSON.parse(text); } catch { return { text }; }
+    })
   ]);
 
   const facebookOk = facebookResponse.status === 'fulfilled';
-  const formsubmitOk = formsubmitResponse.status === 'fulfilled' && formsubmitResponse.value?.success !== false;
+  const formsubmitOk = formsubmitResponse.status === 'fulfilled';
 
   if (!formsubmitOk) {
     return NextResponse.json(
-      { ok: false, error: 'Form submission failed', meta: facebookOk ? facebookResponse.value : null },
+      { ok: false, error: 'Form submission failed', detail: formsubmitResponse.reason, meta: facebookOk ? facebookResponse.value : null },
       { status: 502 }
     );
   }
