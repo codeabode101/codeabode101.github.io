@@ -11,10 +11,6 @@ function normalizePhone(phone: string) {
   return String(phone || '').replace(/[^\d]/g, '');
 }
 
-function normalizeEmail(email: string) {
-  return String(email || '').toLowerCase().trim();
-}
-
 export async function POST(request: Request) {
   const pixelId = process.env.META_PIXEL_ID;
   const accessToken = process.env.META_ACCESS_TOKEN;
@@ -44,16 +40,14 @@ export async function POST(request: Request) {
   } = formData;
 
   const phone = normalizePhone(parent_number || '');
-  const emailClean = normalizeEmail(email || '');
 
-  // Build Facebook user_data with available info
-  const user_data: Record<string, any> = {};
-  if (phone) user_data.ph = [sha256(phone)];
-  if (emailClean) user_data.em = [sha256(emailClean)];
-
-  if (Object.keys(user_data).length === 0) {
-    return NextResponse.json({ ok: false, error: 'Missing phone or email for user_data' }, { status: 400 });
+  if (!phone) {
+    return NextResponse.json({ ok: false, error: 'Missing phone for user_data' }, { status: 400 });
   }
+
+  const user_data: Record<string, any> = {
+    ph: [sha256(phone)]
+  };
 
   const eventId = `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
 
