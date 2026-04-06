@@ -11,7 +11,9 @@
       "Bash(netlify *)",
       "Bash(jq *)",
       "Bash(git rm *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(npm ls *)",
+      "Bash(npm view *)"
     ]
   },
   "$version": 3
