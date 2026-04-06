@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
+import confetti from 'canvas-confetti';
 
 const CONTACT_OPTIONS = [
   { value: 'call', label: 'Phone Call' },
@@ -13,6 +14,25 @@ const CONTACT_OPTIONS = [
 export default function SignupPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  function fireConfetti() {
+    const count = 200;
+    const defaults = { origin: { y: 0.7 } };
+
+    function fire(particleRatio: number, opts: confetti.Options) {
+      confetti({
+        ...defaults,
+        ...opts,
+        particleCount: Math.floor(count * particleRatio)
+      });
+    }
+
+    fire(0.25, { spread: 26, startVelocity: 55 });
+    fire(0.2, { spread: 60 });
+    fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+    fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+    fire(0.1, { spread: 120, startVelocity: 45 });
+  }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -40,6 +60,7 @@ export default function SignupPage() {
       const result = await response.json();
 
       if (result.ok) {
+        fireConfetti();
         setSubmitted(true);
       } else {
         alert('Something went wrong. Please try again.');
@@ -53,19 +74,43 @@ export default function SignupPage() {
 
   if (submitted) {
     return (
-      <div className="form-wrapper" style={{ textAlign: 'center' }}>
-        <h2 style={{ color: '#3366ff' }}>Thank You!</h2>
-        <p style={{ color: '#1a1a1a', marginBottom: '1rem' }}>
-          Your request has been received. We&apos;ll be in touch soon.
+      <div className="form-wrapper" style={{ textAlign: 'center', padding: '3rem 2rem' }}>
+        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
+        <h2 style={{ color: '#3366ff', marginBottom: '1rem', fontSize: '2rem' }}>
+          Thank You!
+        </h2>
+        <p style={{ color: '#555', marginBottom: '2rem', fontSize: '1.05rem', lineHeight: 1.6 }}>
+          Your request has been received.<br />
+          We&apos;ll be in touch soon to get started.
         </p>
         <button
-          className="btn"
+          className="btn submit-btn"
           onClick={() => {
             setSubmitted(false);
             setSubmitting(false);
           }}
+          style={{
+            display: 'inline-block',
+            padding: '0.85rem 2rem',
+            backgroundColor: 'transparent',
+            color: '#3366ff',
+            border: '2px solid #3366ff',
+            borderRadius: '8px',
+            fontWeight: 600,
+            fontSize: '1rem',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={e => {
+            (e.target as HTMLButtonElement).style.backgroundColor = '#3366ff';
+            (e.target as HTMLButtonElement).style.color = '#fff';
+          }}
+          onMouseLeave={e => {
+            (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
+            (e.target as HTMLButtonElement).style.color = '#3366ff';
+          }}
         >
-          Submit Another
+          Submit Another Request
         </button>
       </div>
     );
@@ -156,6 +201,8 @@ export default function SignupPage() {
         .form-group input[type="text"],
         .form-group input[type="number"],
         .form-group input[type="tel"],
+        .form-group input[type="email"],
+        .form-group input[type="datetime-local"],
         .form-group textarea {
           width: 100%;
           padding: 0.6rem;
