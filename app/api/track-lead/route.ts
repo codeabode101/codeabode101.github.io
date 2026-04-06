@@ -84,7 +84,9 @@ export async function POST(request: Request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Origin': 'https://codeabode.com',
+        'Referer': 'https://codeabode.com/signup'
       },
       body: JSON.stringify(formData)
     }).then(async r => {
