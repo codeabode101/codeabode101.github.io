@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xeogbndr';
+const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/codeabode101@gmail.com';
 
 function sha256(value: string) {
   return crypto.createHash('sha256').update(value).digest('hex');
@@ -83,14 +83,14 @@ export async function POST(request: Request) {
 
   const facebookUrl = `https://graph.facebook.com/v18.0/${encodeURIComponent(pixelId)}/events?access_token=${encodeURIComponent(accessToken)}`;
 
-  // Run Facebook CAPI and Formspree in parallel
-  const [facebookResponse, formspreeResponse] = await Promise.allSettled([
+  // Run Facebook CAPI and FormSubmit in parallel
+  const [facebookResponse, formsubmitResponse] = await Promise.allSettled([
     fetch(facebookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(facebookBody)
     }).then(r => r.json().catch(() => null)),
-    fetch(FORMSPREE_ENDPOINT, {
+    fetch(FORMSUBMIT_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -101,9 +101,9 @@ export async function POST(request: Request) {
   ]);
 
   const facebookOk = facebookResponse.status === 'fulfilled';
-  const formspreeOk = formspreeResponse.status === 'fulfilled' && formspreeResponse.value?.success !== false;
+  const formsubmitOk = formsubmitResponse.status === 'fulfilled' && formsubmitResponse.value?.success !== false;
 
-  if (!formspreeOk) {
+  if (!formsubmitOk) {
     return NextResponse.json(
       { ok: false, error: 'Form submission failed', meta: facebookOk ? facebookResponse.value : null },
       { status: 502 }
