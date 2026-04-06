@@ -1,14 +1,16 @@
 {
   "name": "codeabode101.github.io",
   "version": "1.0.0",
-  "description": "Static site deployed on Netlify (recommended) so we can use Netlify Functions for Meta Conversions API.",
+  "description": "Next.js site deployed on Cloudflare Workers with Meta Conversions API.",
   "main": "index.js",
   "scripts": {
     "build": "next build",
+    "cf-build": "opennextjs-cloudflare build",
+    "cf-deploy": "opennextjs-cloudflare deploy",
+    "deploy": "npm run cf-build && npm run cf-deploy",
     "dev": "next dev",
     "start": "next start",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
