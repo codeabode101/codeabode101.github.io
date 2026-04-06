@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/codeabode101@gmail.com';
+const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/codeabode101@gmail.com';
 
 function sha256(value: string) {
   return crypto.createHash('sha256').update(value).digest('hex');
