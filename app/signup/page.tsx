@@ -1,4 +1,47 @@
+'use client';
+
+import { useEffect, useState, FormEvent } from 'react';
+
 export default function SignupPage() {
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      const form = e.currentTarget;
+      const formData = new FormData(form);
+      const data: Record<string, any> = {};
+      formData.forEach((value, key) => {
+        if (data[key]) {
+          if (!Array.isArray(data[key])) data[key] = [data[key]];
+          data[key].push(value);
+        } else {
+          data[key] = value;
+        }
+      });
+
+      const response = await fetch('/api/track-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (result.ok) {
+        window.location.href = '/thank-you';
+      } else {
+        alert('Something went wrong. Please try again.');
+        setSubmitting(false);
+      }
+    } catch (error) {
+      alert('Network error. Please check your connection and try again.');
+      setSubmitting(false);
+    }
+  }
+
   return (
     <>
       {/* Client-side Pixel for browser tracking */}
@@ -128,7 +171,7 @@ export default function SignupPage() {
       `}</style>
 
       <div className="form-wrapper">
-        <form id="demo-signup-form">
+        <form onSubmit={handleSubmit}>
           <h2>Book Your Free Demo Class</h2>
 
           <div className="form-group">
@@ -206,62 +249,11 @@ export default function SignupPage() {
             />
           </div>
 
-          <button type="submit" className="btn submit-btn">Send Request</button>
+          <button type="submit" className="btn submit-btn" disabled={submitting}>
+            {submitting ? 'Submitting...' : 'Send Request'}
+          </button>
         </form>
       </div>
-
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              const form = document.getElementById('demo-signup-form');
-              if (!form) return;
-
-              form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                const submitBtn = form.querySelector('.submit-btn');
-                const originalText = submitBtn.textContent;
-                submitBtn.textContent = 'Submitting...';
-                submitBtn.disabled = true;
-
-                try {
-                  const formData = new FormData(form);
-                  const data = {};
-                  formData.forEach((value, key) => {
-                    if (data[key]) {
-                      if (!Array.isArray(data[key])) data[key] = [data[key]];
-                      data[key].push(value);
-                    } else {
-                      data[key] = value;
-                    }
-                  });
-
-                  const response = await fetch('/api/track-lead', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                  });
-
-                  const result = await response.json();
-
-                  if (result.ok) {
-                    window.location.href = '/thank-you';
-                  } else {
-                    alert('Something went wrong. Please try again.');
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                  }
-                } catch (error) {
-                  alert('Network error. Please check your connection and try again.');
-                  submitBtn.textContent = originalText;
-                  submitBtn.disabled = false;
-                }
-              });
-            })();
-          `
-        }}
-      />
     </>
   );
 }
