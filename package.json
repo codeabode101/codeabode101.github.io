@@ -4,10 +4,10 @@
   "description": "Next.js site deployed on Cloudflare Workers with Meta Conversions API.",
   "main": "index.js",
   "scripts": {
-    "build": "next build",
+    "build": "opennextjs-cloudflare build",
     "cf-build": "opennextjs-cloudflare build",
     "cf-deploy": "opennextjs-cloudflare deploy",
-    "deploy": "npm run cf-build && npm run cf-deploy",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "dev": "next dev",
     "start": "next start",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
