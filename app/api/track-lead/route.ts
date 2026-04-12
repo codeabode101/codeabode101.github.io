@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
 const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/rahejaom@outlook.com';
-
-export const runtime = 'nodejs';
+const D1_API_BASE = 'https://api.cloudflare.com/client/v4/accounts/0bfab51e8cc50b91033dc21005e8cabc/d1/database/1ee9fbde-05f0-42de-a8ba-b5bfff43fbec';
+const BDC_API_BASE = 'https://api-bdc.net/data/phone-number-validate';
 
 function sha256Value(value: string): string {
   return crypto.createHash('sha256').update(value).digest('hex');
@@ -13,9 +13,88 @@ function normalizePhone(phone: string): string {
   return String(phone || '').replace(/[^\d]/g, '');
 }
 
-export async function POST(request: Request, context: any) {
-  const env = context?.env || (typeof global !== 'undefined' ? (global as any).__env__ : undefined) || {};
-  const hasD1 = !!env.LEADS_DB;
+async function validatePhoneWithBDC(phone: string, apiKey: string): Promise<{valid: boolean; lineType: string; countryCode: string; internationalFormat: string}> {
+  try {
+    const url = `${BDC_API_BASE}?number=${encodeURIComponent(phone)}&countryCode=IN&localityLanguage=en&key=${encodeURIComponent(apiKey)}`;
+    const response = await fetch(url);
+    
+    if (response.status === 429 || response.status === 403) {
+      console.log('BDC rate limited, continuing anyway');
+      return { valid: true, lineType: 'UNKNOWN', countryCode: '', internationalFormat: phone };
+    }
+    
+    const data = await response.json();
+    return {
+      valid: data.isValid ?? false,
+      lineType: data.lineType ?? 'UNKNOWN',
+      countryCode: data.country?.isoAlpha2 ?? '',
+      internationalFormat: data.internationalFormat ?? phone
+    };
+  } catch (err) {
+    console.error('BDC validation error:', err);
+    return { valid: true, lineType: 'ERROR', countryCode: '', internationalFormat: phone };
+  }
+}
+
+export const runtime = 'nodejs';
+
+async function insertLeadToD1(name: string, age: string | number, parentNumber: string, message: string | null, contact: string | null, sourceUrl: string | null, eventId: string, fbc: string | null) {
+  const apiToken = process.env.CLOUDFLARE_D1_TOKEN;
+  if (!apiToken) {
+    console.log('No D1 token configured');
+    return false;
+  }
+
+  try {
+    const response = await fetch(`${D1_API_BASE}/query`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiToken}`,
+      },
+      body: JSON.stringify({
+        params: [name, age ? parseInt(String(age)) : null, parentNumber, message, contact, sourceUrl, eventId, fbc, eventId, 0, null],
+        sql: `INSERT INTO leads (name, age, parent_number, message, contact, source_url, event_id, fbc, meta_event_id, meta_success, meta_error) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      }),
+    });
+
+    const result = await response.json();
+    console.log('D1 insert result:', result);
+    return result.success;
+  } catch (err) {
+    console.error('D1 insert error:', err);
+    return false;
+  }
+}
+
+async function updateLeadInD1(eventId: string, metaSuccess: number, metaError: string | null) {
+  const apiToken = process.env.CLOUDFLARE_D1_TOKEN;
+  if (!apiToken) return false;
+
+  try {
+    const response = await fetch(`${D1_API_BASE}/query`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiToken}`,
+      },
+      body: JSON.stringify({
+        params: [metaSuccess, metaError, eventId],
+        sql: `UPDATE leads SET meta_success = ?, meta_error = ? WHERE event_id = ?`
+      }),
+    });
+
+    const result = await response.json();
+    return result.success;
+  } catch (err) {
+    console.error('D1 update error:', err);
+    return false;
+  }
+}
+
+export async function POST(request: Request) {
+  const apiToken = process.env.CLOUDFLARE_D1_TOKEN;
+  const bdcToken = process.env.BIGDATA_CLOUD_KEY;
   
   const pixelId = process.env.META_PIXEL_ID;
   const accessToken = process.env.META_ACCESS_TOKEN;
@@ -46,32 +125,32 @@ export async function POST(request: Request, context: any) {
     return NextResponse.json({ ok: false, error: 'Invalid phone number' }, { status: 400 });
   }
 
-  const eventId = (event_id as string) || `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
-
-  // Save lead to D1 first
-  let d1Success = false;
-  console.log('D1 check - has LEADS_DB:', hasD1, 'env keys:', env ? Object.keys(env) : 'none');
-  if (env.LEADS_DB) {
-    try {
-      const insertResult = await env.LEADS_DB.prepare(`
-        INSERT INTO leads (name, age, parent_number, message, contact, source_url, event_id, fbc, meta_event_id, meta_success, meta_error)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NULL)
-      `).bind(
-        name as string,
-        age ? parseInt(age as string) : null,
-        parent_number as string,
-        (message as string) || null,
-        (contact as string) ? JSON.stringify(contact) : null,
-        (sourceUrl as string) || null,
-        eventId,
-        (fbc as string) || null,
-        eventId
-      ).run();
-      d1Success = insertResult.success;
-    } catch (e) {
-      console.error('D1 insert error:', e);
+  // Validate phone with BigDataCloud
+  let phoneValid = true;
+  let phoneLineType = 'UNKNOWN';
+  if (bdcToken) {
+    const bdcResult = await validatePhoneWithBDC(phone, bdcToken);
+    phoneValid = bdcResult.valid;
+    phoneLineType = bdcResult.lineType;
+    console.log('BDC validation:', phone, phoneValid, phoneLineType);
+    if (!phoneValid) {
+      return NextResponse.json({ ok: false, error: 'Invalid phone number' }, { status: 400 });
     }
   }
+
+  const eventId = (event_id as string) || `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
+
+  // Save lead to D1 using HTTP API
+  const d1Success = await insertLeadToD1(
+    name as string,
+    age as string,
+    parent_number as string,
+    message as string | null,
+    contact as string | null,
+    sourceUrl as string | null,
+    eventId,
+    fbc as string | null
+  );
 
   const user_data: Record<string, unknown> = {
     ph: [sha256Value(phone)]
@@ -127,18 +206,8 @@ export async function POST(request: Request, context: any) {
   const formsubmitOk = formsubmitResponse.status === 'fulfilled';
 
   // Update D1 with Meta result
-  if (env.LEADS_DB && d1Success) {
-    try {
-      await env.LEADS_DB.prepare(`
-        UPDATE leads SET meta_success = ?, meta_error = ? WHERE event_id = ?
-      `).bind(
-        facebookResult?.events_received ? 1 : 0,
-        facebookResult?.messages?.length > 0 ? JSON.stringify(facebookResult.messages) : null,
-        eventId
-      ).run();
-    } catch (e) {
-      console.error('D1 update error:', e);
-    }
+  if (d1Success) {
+    await updateLeadInD1(eventId, facebookResult?.events_received ? 1 : 0, facebookResult?.messages?.length > 0 ? JSON.stringify(facebookResult.messages) : null);
   }
 
   if (!formsubmitOk) {

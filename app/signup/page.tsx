@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState, useMemo, FormEvent } from 'react';
+import { useEffect, useState, FormEvent, ChangeEvent } from 'react';
 import confetti from 'canvas-confetti';
+import { parsePhoneNumber, isValidPhoneNumber } from 'libphonenumber-js';
 
 declare global {
   interface Window {
@@ -24,10 +25,23 @@ function getFbcFromUrl(): string | undefined {
   return url.searchParams.get('fbc') || url.searchParams.get('fbclid') || undefined;
 }
 
+function validatePhonePN(phone: string): {valid: boolean; internationalFormat: string} {
+  try {
+    const parsed = parsePhoneNumber(phone, 'IN');
+    if (!parsed || !isValidPhoneNumber(phone, 'IN')) {
+      return { valid: false, internationalFormat: phone };
+    }
+    return { valid: true, internationalFormat: parsed.format('E.164') };
+  } catch {
+    return { valid: false, internationalFormat: phone };
+  }
+}
+
 export default function SignupPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [fbc, setFbc] = useState<string | undefined>();
+  const [phoneValid, setPhoneValid] = useState(true);
 
   useEffect(() => {
     setFbc(getFbcFromUrl());
@@ -52,9 +66,36 @@ export default function SignupPage() {
     fire(0.1, { spread: 120, startVelocity: 45 });
   }
 
+  function handlePhoneChange(e: ChangeEvent<HTMLInputElement>) {
+    const phone = e.target.value.replace(/\D/g, '');
+    if (phone.length >= 10) {
+      const result = validatePhonePN(phone);
+      setPhoneValid(result.valid);
+    } else {
+      setPhoneValid(true);
+    }
+  }
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
+
+    const form = e.currentTarget;
+    const phoneInput = form.elements.namedItem('parent_number') as HTMLInputElement;
+    const phone = phoneInput.value.replace(/\D/g, '');
+    
+    if (phone.length < 10) {
+      setPhoneValid(false);
+      setSubmitting(false);
+      return;
+    }
+
+    const pnResult = validatePhonePN(phone);
+    if (!pnResult.valid) {
+      setPhoneValid(false);
+      setSubmitting(false);
+      return;
+    }
 
     const eventId = `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
 
@@ -319,8 +360,11 @@ export default function SignupPage() {
               id="parent-number"
               name="parent_number"
               required
-              placeholder="(555) 123-4567"
+              placeholder="9876543210"
+              onBlur={handlePhoneChange}
+              style={{ borderColor: !phoneValid ? '#e00' : undefined }}
             />
+            {!phoneValid && <p style={{ color: '#e00', fontSize: '0.875rem' }}>Please enter a valid phone number</p>}
           </div>
 
           <div className="form-group">
