@@ -3,6 +3,12 @@
 import { useEffect, useState, FormEvent } from 'react';
 import confetti from 'canvas-confetti';
 
+declare global {
+  interface Window {
+    fbq?: (...args: any[]) => void;
+  }
+}
+
 const CONTACT_OPTIONS = [
   { value: 'call', label: 'Phone Call' },
   { value: 'text', label: 'Text (SMS)' },
@@ -38,6 +44,12 @@ export default function SignupPage() {
     e.preventDefault();
     setSubmitting(true);
 
+    const eventId = `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
+
+    if (typeof window.fbq === 'function') {
+      window.fbq('track', 'Lead', {}, { eventID: eventId });
+    }
+
     try {
       const form = e.currentTarget;
       const formData = new FormData(form);
@@ -50,6 +62,7 @@ export default function SignupPage() {
           data[key] = value;
         }
       });
+      data.event_id = eventId;
 
       const response = await fetch('/api/track-lead', {
         method: 'POST',

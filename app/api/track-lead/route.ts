@@ -36,10 +36,13 @@ export async function POST(request: Request) {
     parent_number,
     message,
     contact,
-    sourceUrl
+    sourceUrl,
+    event_id
   } = formData;
 
   const phone = normalizePhone(parent_number || '');
+
+  const eventId = event_id || `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
 
   if (!phone) {
     return NextResponse.json({ ok: false, error: 'Missing phone for user_data' }, { status: 400 });
@@ -49,9 +52,7 @@ export async function POST(request: Request) {
     ph: [sha256(phone)]
   };
 
-  const eventId = `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
-
-  // Send to Facebook CAPI
+  // Send to Facebook CAPI with matching event_id
   const facebookBody: Record<string, any> = {
     data: [
       {
