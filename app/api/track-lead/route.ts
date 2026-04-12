@@ -37,7 +37,8 @@ export async function POST(request: Request) {
     message,
     contact,
     sourceUrl,
-    event_id
+    event_id,
+    fbc
   } = formData;
 
   const phone = normalizePhone(parent_number || '');
@@ -51,6 +52,10 @@ export async function POST(request: Request) {
   const user_data: Record<string, any> = {
     ph: [sha256(phone)]
   };
+  
+  if (fbc) {
+    user_data.fbc = fbc;
+  }
 
   // Send to Facebook CAPI with matching event_id
   const facebookBody: Record<string, any> = {

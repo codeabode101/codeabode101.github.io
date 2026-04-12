@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState, FormEvent } from 'react';
+import { useEffect, useState, useMemo, FormEvent } from 'react';
 import confetti from 'canvas-confetti';
 
 declare global {
   interface Window {
     fbq?: (...args: any[]) => void;
+    fbc?: string;
   }
 }
 
@@ -17,9 +18,20 @@ const CONTACT_OPTIONS = [
   { value: 'messenger', label: 'Facebook Messenger' }
 ];
 
+function getFbcFromUrl(): string | undefined {
+  if (typeof window === 'undefined') return undefined;
+  const url = new URL(window.location.href);
+  return url.searchParams.get('fbc') || url.searchParams.get('fbclid') || undefined;
+}
+
 export default function SignupPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [fbc, setFbc] = useState<string | undefined>();
+
+  useEffect(() => {
+    setFbc(getFbcFromUrl());
+  }, []);
 
   function fireConfetti() {
     const count = 200;
@@ -63,6 +75,7 @@ export default function SignupPage() {
         }
       });
       data.event_id = eventId;
+      if (fbc) data.fbc = fbc;
 
       const response = await fetch('/api/track-lead', {
         method: 'POST',
