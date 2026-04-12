@@ -41,19 +41,23 @@ export async function POST(request: Request) {
     fbc
   } = formData;
 
-  const phone = normalizePhone(parent_number || '');
+  if (!name || !age || !parent_number) {
+    return NextResponse.json({ ok: false, error: 'Missing required fields' }, { status: 400 });
+  }
+
+  const phone = normalizePhone(parent_number);
+
+  if (!phone || phone.length < 10) {
+    return NextResponse.json({ ok: false, error: 'Invalid phone number' }, { status: 400 });
+  }
 
   const eventId = event_id || `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
-
-  if (!phone) {
-    return NextResponse.json({ ok: false, error: 'Missing phone for user_data' }, { status: 400 });
-  }
 
   const user_data: Record<string, any> = {
     ph: [sha256(phone)]
   };
   
-  if (fbc) {
+  if (fbc && fbc.startsWith('fb')) {
     user_data.fbc = fbc;
   }
 

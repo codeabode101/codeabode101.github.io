@@ -58,10 +58,6 @@ export default function SignupPage() {
 
     const eventId = `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
 
-    if (typeof window.fbq === 'function') {
-      window.fbq('track', 'Lead', {}, { eventID: eventId });
-    }
-
     try {
       const form = e.currentTarget;
       const formData = new FormData(form);
@@ -86,6 +82,9 @@ export default function SignupPage() {
       const result = await response.json();
 
       if (result.ok) {
+        if (typeof window.fbq === 'function') {
+          window.fbq('track', 'Lead', {}, { eventID: eventId });
+        }
         fireConfetti();
         setSubmitted(true);
       } else {
