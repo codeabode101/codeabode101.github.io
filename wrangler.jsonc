@@ -21,5 +21,9 @@
   },
   "observability": {
     "enabled": true
+  },
+  "vars": {
+    "NEXT_PUBLIC_META_PIXEL_ID": "2333941467103459",
+    "META_PIXEL_ID": "2333941467103459"
   }
 }
