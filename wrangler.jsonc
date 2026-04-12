@@ -25,5 +25,12 @@
   "vars": {
     "NEXT_PUBLIC_META_PIXEL_ID": "2333941467103459",
     "META_PIXEL_ID": "2333941467103459"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "LEADS_DB",
+      "database_name": "codeabode-leads",
+      "database_id": "1ee9fbde-05f0-42de-a8ba-b5bfff43fbec"
+    }
+  ]
 }

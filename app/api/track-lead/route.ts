@@ -3,6 +3,8 @@ import crypto from 'crypto';
 
 const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/rahejaom@outlook.com';
 
+export const runtime = 'edge';
+
 function sha256(value: string) {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
