@@ -5,6 +5,14 @@ const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/rahejaom@outlook.com';
 const D1_API_BASE = 'https://api.cloudflare.com/client/v4/accounts/0bfab51e8cc50b91033dc21005e8cabc/d1/database/1ee9fbde-05f0-42de-a8ba-b5bfff43fbec';
 const BDC_API_BASE = 'https://api-bdc.net/data/phone-number-validate';
 
+const VALID_GOALS = new Set([
+  'build_a_game', 'cs50_ai_certified', 'pcep_certified',
+  'app_dev', 'web_dev', 'learn_python', 'learn_java', 'learn_rust'
+]);
+const MAX_NAME_LENGTH = 100;
+const MIN_AGE = 5;
+const MAX_AGE = 120;
+
 function sha256Value(value: string): string {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
@@ -132,6 +140,52 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Missing required fields' }, { status: 400 });
   }
 
+  // Validate name lengths
+  const nameFields = [parent_first_name, parent_last_name, student_first_name, student_last_name];
+  for (const name of nameFields) {
+    if (typeof name !== 'string' || name.trim().length < 1 || name.trim().length > MAX_NAME_LENGTH) {
+      return NextResponse.json({ ok: false, error: 'Invalid name field' }, { status: 400 });
+    }
+  }
+
+  // Validate age range
+  const parsedAge = parseInt(String(age));
+  if (isNaN(parsedAge) || parsedAge < MIN_AGE || parsedAge > MAX_AGE) {
+    return NextResponse.json({ ok: false, error: 'Age must be between 5 and 120' }, { status: 400 });
+  }
+
+  // Validate student experience (1-5)
+  const studentExperience = formData.student_experience ? parseInt(String(formData.student_experience)) : null;
+  if (studentExperience !== null && (isNaN(studentExperience) || studentExperience < 1 || studentExperience > 5)) {
+    return NextResponse.json({ ok: false, error: 'Experience must be between 1 and 5' }, { status: 400 });
+  }
+
+  // Validate student goals
+  let studentGoals: string | null = null;
+  if (formData.student_goals) {
+    const goals = Array.isArray(formData.student_goals) ? formData.student_goals : [formData.student_goals];
+    for (const g of goals) {
+      if (!VALID_GOALS.has(String(g))) {
+        return NextResponse.json({ ok: false, error: 'Invalid student goal: ' + g }, { status: 400 });
+      }
+    }
+    studentGoals = goals.map(String).join(', ');
+  }
+
+  // Validate demo datetime is in the future
+  let demoDatetime: string | null = null;
+  if (formData.demo_datetime) {
+    const demoStr = String(formData.demo_datetime);
+    const demoDate = new Date(demoStr);
+    if (isNaN(demoDate.getTime())) {
+      return NextResponse.json({ ok: false, error: 'Invalid demo datetime' }, { status: 400 });
+    }
+    if (demoDate < new Date()) {
+      return NextResponse.json({ ok: false, error: 'Demo time must be in the future' }, { status: 400 });
+    }
+    demoDatetime = demoStr;
+  }
+
   const phone = normalizePhone(parent_number as string);
 
   if (!phone || phone.length < 10) {
@@ -151,11 +205,7 @@ export async function POST(request: Request) {
     }
   }
 
-  // Extract new fields
-  const studentExperience = formData.student_experience ? parseInt(String(formData.student_experience)) : null;
-  const studentGoals = Array.isArray(formData.student_goals) ? (formData.student_goals as string[]).join(', ') : (formData.student_goals as string | null);
-  const demoDatetime = (formData.demo_datetime as string | null) || null;
-
+  // Extract fbc from URL param or cookie
   const eventId = (event_id as string) || `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
 
   // Save lead to D1 using HTTP API
