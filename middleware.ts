@@ -24,6 +24,26 @@ export async function middleware(request: NextRequest) {
       return response;
     }
 
+    // Extract cookies for advanced matching
+    const cookieHeader = request.headers.get('cookie') || '';
+    const getCookieValue = (cookies: string, name: string): string | undefined => {
+      const match = cookies.match(new RegExp(`(?:^|;)\\s*${name}=([^;]*)`));
+      return match ? decodeURIComponent(match[1]) : undefined;
+    };
+
+    const fbc = getCookieValue(cookieHeader, '_fbc');
+    const fbp = getCookieValue(cookieHeader, '_fbp');
+    const externalId = getCookieValue(cookieHeader, '_external_id');
+
+    const userData: Record<string, string> = {
+      client_ip_address: ip.split(',')[0].trim(),
+      client_user_agent: userAgent
+    };
+
+    if (fbc) userData.fbc = fbc;
+    if (fbp) userData.fbp = fbp;
+    if (externalId) userData.external_id = externalId;
+
     const body: Record<string, any> = {
       data: [
         {
@@ -31,10 +51,7 @@ export async function middleware(request: NextRequest) {
           event_time: Math.floor(Date.now() / 1000),
           event_source_url: url,
           action_source: 'website',
-          user_data: {
-            client_ip_address: ip.split(',')[0].trim(),
-            client_user_agent: userAgent
-          }
+          user_data: userData
         }
       ]
     };

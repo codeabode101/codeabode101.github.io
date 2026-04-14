@@ -25,6 +25,18 @@ function getFbcFromUrl(): string | undefined {
   return url.searchParams.get('fbc') || url.searchParams.get('fbclid') || undefined;
 }
 
+function getFbcFromCookie(): string | undefined {
+  if (typeof document === 'undefined') return undefined;
+  const match = document.cookie.match(/(?:^|;)\s*_fbc=([^;]*)/);
+  return match ? decodeURIComponent(match[1]) : undefined;
+}
+
+function getFbpFromCookie(): string | undefined {
+  if (typeof document === 'undefined') return undefined;
+  const match = document.cookie.match(/(?:^|;)\s*_fbp=([^;]*)/);
+  return match ? decodeURIComponent(match[1]) : undefined;
+}
+
 function validatePhonePN(phone: string): {valid: boolean; internationalFormat: string} {
   try {
     const parsed = parsePhoneNumber(phone, 'IN');
@@ -44,7 +56,7 @@ export default function SignupPage() {
   const [phoneValid, setPhoneValid] = useState(true);
 
   useEffect(() => {
-    setFbc(getFbcFromUrl());
+    setFbc(getFbcFromUrl() || getFbcFromCookie());
   }, []);
 
   function fireConfetti() {

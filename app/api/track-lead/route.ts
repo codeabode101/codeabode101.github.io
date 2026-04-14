@@ -153,12 +153,44 @@ export async function POST(request: Request) {
   );
 
   const user_data: Record<string, unknown> = {
-    ph: [sha256Value(phone)]
+    ph: sha256Value(phone)
   };
-  
-  if (fbc && typeof fbc === 'string' && fbc.startsWith('fb')) {
-    user_data.fbc = fbc;
+
+  // Extract fbc from URL param or cookie (cookie is more reliable for returning users)
+  const cookieHeader = request.headers.get('cookie') || '';
+  const getCookieValue = (cookies: string, name: string): string | undefined => {
+    const match = cookies.match(new RegExp(`(?:^|;)\\s*${name}=([^;]*)`));
+    return match ? decodeURIComponent(match[1]) : undefined;
+  };
+
+  const cookieFbc = getCookieValue(cookieHeader, '_fbc');
+  const finalFbc = (fbc && typeof fbc === 'string' && fbc.startsWith('fb')) ? fbc : (cookieFbc || null);
+  if (finalFbc) {
+    user_data.fbc = finalFbc;
   }
+
+  // Extract fbp (browser ID) from _fbp cookie
+  const fbp = getCookieValue(cookieHeader, '_fbp');
+  if (fbp) {
+    user_data.fbp = fbp;
+  }
+
+  // Add IP address and user agent for match quality
+  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '';
+  if (ip) {
+    user_data.client_ip_address = ip.split(',')[0].trim();
+  }
+  const userAgent = request.headers.get('user-agent') || '';
+  if (userAgent) {
+    user_data.client_user_agent = userAgent;
+  }
+
+  // Generate or retrieve external_id from persistent cookie
+  let externalId = getCookieValue(cookieHeader, '_external_id');
+  if (!externalId) {
+    externalId = sha256Value(`${phone}-${Date.now()}`);
+  }
+  user_data.external_id = externalId;
 
   const facebookBody = {
     data: [{
@@ -211,19 +243,43 @@ export async function POST(request: Request) {
   }
 
   if (!formsubmitOk) {
-    return NextResponse.json(
+    const errorResponse = NextResponse.json(
       { ok: false, error: 'Form submission failed', detail: String(formsubmitResponse.reason), meta: facebookOk ? facebookResult : null },
       { status: 502 }
     );
+    if (!getCookieValue(cookieHeader, '_external_id')) {
+      errorResponse.cookies.set('_external_id', externalId, {
+        maxAge: 60 * 60 * 24 * 365,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/'
+      });
+    }
+    return errorResponse;
   }
 
-  return NextResponse.json({
+  // Build response and set external_id cookie
+  const responseJson = {
     ok: true,
     eventId,
     facebook: facebookResult,
     facebookOk,
     d1: d1Success
-  });
+  };
+
+  const response = NextResponse.json(responseJson);
+  if (!getCookieValue(cookieHeader, '_external_id')) {
+    response.cookies.set('_external_id', externalId, {
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/'
+    });
+  }
+
+  return response;
 }
 
 export function GET() {
