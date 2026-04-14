@@ -19,6 +19,17 @@ const CONTACT_OPTIONS = [
   { value: 'messenger', label: 'Facebook Messenger' }
 ];
 
+const STUDENT_GOALS = [
+  { value: 'build_a_game', label: 'Build a game' },
+  { value: 'cs50_ai_certified', label: 'Get Harvard CS50 AI certified' },
+  { value: 'pcep_certified', label: 'Get PCEP certified' },
+  { value: 'app_dev', label: 'App dev' },
+  { value: 'web_dev', label: 'Web dev' },
+  { value: 'learn_python', label: 'Learn Python' },
+  { value: 'learn_java', label: 'Learn Java' },
+  { value: 'learn_rust', label: 'Learn Rust' }
+];
+
 function getFbcFromUrl(): string | undefined {
   if (typeof window === 'undefined') return undefined;
   const url = new URL(window.location.href);
@@ -335,21 +346,76 @@ export default function SignupPage() {
           width: 100%;
           text-align: center;
         }
+
+        .experience-option:has(input:checked) {
+          border-color: var(--primary);
+          background-color: var(--primary);
+          color: #fff;
+        }
+
+        .experience-option:hover:not(:has(input:checked)) {
+          border-color: var(--primary);
+          background-color: var(--bg-light);
+        }
+
+        h3 {
+          border-top: 1px solid var(--input-border);
+          padding-top: 0.75rem;
+        }
       `}</style>
 
       <div className="form-wrapper">
         <form onSubmit={handleSubmit}>
           <h2>Book Your Free Demo Class</h2>
 
-          <div className="form-group">
-            <label htmlFor="name">What&apos;s your name?</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              required
-              placeholder="Jane Doe"
-            />
+          <h3 style={{ color: 'var(--primary)', fontSize: '1.1rem', marginBottom: '0.75rem', marginTop: '1.25rem' }}>Parent Information</h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className="form-group">
+              <label htmlFor="parent_first_name">Parent First Name</label>
+              <input
+                type="text"
+                id="parent_first_name"
+                name="parent_first_name"
+                required
+                placeholder="Jane"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="parent_last_name">Parent Last Name</label>
+              <input
+                type="text"
+                id="parent_last_name"
+                name="parent_last_name"
+                required
+                placeholder="Doe"
+              />
+            </div>
+          </div>
+
+          <h3 style={{ color: 'var(--primary)', fontSize: '1.1rem', marginBottom: '0.75rem', marginTop: '1.25rem' }}>Student Information</h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className="form-group">
+              <label htmlFor="student_first_name">Student First Name</label>
+              <input
+                type="text"
+                id="student_first_name"
+                name="student_first_name"
+                required
+                placeholder="Alex"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="student_last_name">Student Last Name</label>
+              <input
+                type="text"
+                id="student_last_name"
+                name="student_last_name"
+                required
+                placeholder="Doe"
+              />
+            </div>
           </div>
 
           <div className="form-group">
@@ -380,12 +446,68 @@ export default function SignupPage() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="message">How can we help your child?</label>
+            <label htmlFor="student_experience">Student Experience (1 = Beginner, 5 = Advanced)</label>
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+              {[1, 2, 3, 4, 5].map(num => (
+                <label
+                  key={num}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '2.5rem',
+                    height: '2.5rem',
+                    border: '2px solid var(--input-border)',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    transition: 'all 0.2s ease'
+                  }}
+                  className="experience-option"
+                >
+                  <input
+                    type="radio"
+                    name="student_experience"
+                    value={num}
+                    required
+                    style={{ display: 'none' }}
+                  />
+                  {num}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <p>Student Goals <small>(check all that apply)</small></p>
+            <div className="contact-options">
+              {STUDENT_GOALS.map(goal => (
+                <label key={goal.value}>
+                  <input type="checkbox" name="student_goals[]" value={goal.value} />
+                  {goal.label}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="demo_datetime">When are you free for a demo?</label>
+            <input
+              type="datetime-local"
+              id="demo_datetime"
+              name="demo_datetime"
+              min={new Date().toISOString().slice(0, 16)}
+              placeholder="Select date and time"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="message">Anything else?</label>
             <textarea
               id="message"
               name="message"
               rows={4}
-              placeholder="Tell us about your child's goals and needs..."
+              placeholder="Share any additional details..."
             />
           </div>
 

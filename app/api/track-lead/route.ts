@@ -38,7 +38,15 @@ async function validatePhoneWithBDC(phone: string, apiKey: string): Promise<{val
 
 export const runtime = 'nodejs';
 
-async function insertLeadToD1(name: string, age: string | number, parentNumber: string, message: string | null, contact: string | null, sourceUrl: string | null, eventId: string, fbc: string | null) {
+async function insertLeadToD1(
+  parentFirstName: string, parentLastName: string,
+  studentFirstName: string, studentLastName: string,
+  age: string | number, parentNumber: string,
+  studentExperience: number | null, studentGoals: string | null,
+  demoDatetime: string | null,
+  message: string | null, contact: string | null, sourceUrl: string | null,
+  eventId: string, fbc: string | null
+) {
   const apiToken = process.env.CLOUDFLARE_D1_TOKEN;
   if (!apiToken) {
     console.log('No D1 token configured');
@@ -53,8 +61,13 @@ async function insertLeadToD1(name: string, age: string | number, parentNumber: 
         'Authorization': `Bearer ${apiToken}`,
       },
       body: JSON.stringify({
-        params: [name, age ? parseInt(String(age)) : null, parentNumber, message, contact, sourceUrl, eventId, fbc, eventId, 0, null],
-        sql: `INSERT INTO leads (name, age, parent_number, message, contact, source_url, event_id, fbc, meta_event_id, meta_success, meta_error) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        params: [
+          parentFirstName, parentLastName, studentFirstName, studentLastName,
+          age ? parseInt(String(age)) : null, parentNumber,
+          studentExperience, studentGoals, demoDatetime,
+          message, contact, sourceUrl, eventId, fbc, eventId, 0, null
+        ],
+        sql: `INSERT INTO leads (parent_first_name, parent_last_name, student_first_name, student_last_name, age, parent_number, student_experience, student_goals, demo_datetime, message, contact, source_url, event_id, fbc, meta_event_id, meta_success, meta_error) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       }),
     });
 
@@ -113,9 +126,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const { name, age, parent_number, message, contact, sourceUrl, event_id, fbc } = formData;
+  const { parent_first_name, parent_last_name, student_first_name, student_last_name, age, parent_number, message, contact, sourceUrl, event_id, fbc } = formData;
 
-  if (!name || !age || !parent_number) {
+  if (!parent_first_name || !parent_last_name || !student_first_name || !student_last_name || !age || !parent_number) {
     return NextResponse.json({ ok: false, error: 'Missing required fields' }, { status: 400 });
   }
 
@@ -138,13 +151,24 @@ export async function POST(request: Request) {
     }
   }
 
+  // Extract new fields
+  const studentExperience = formData.student_experience ? parseInt(String(formData.student_experience)) : null;
+  const studentGoals = Array.isArray(formData.student_goals) ? (formData.student_goals as string[]).join(', ') : (formData.student_goals as string | null);
+  const demoDatetime = (formData.demo_datetime as string | null) || null;
+
   const eventId = (event_id as string) || `lead-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
 
   // Save lead to D1 using HTTP API
   const d1Success = await insertLeadToD1(
-    name as string,
+    parent_first_name as string,
+    parent_last_name as string,
+    student_first_name as string,
+    student_last_name as string,
     age as string,
     parent_number as string,
+    studentExperience,
+    studentGoals,
+    demoDatetime,
     message as string | null,
     contact as string | null,
     sourceUrl as string | null,
