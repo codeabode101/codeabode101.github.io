@@ -316,12 +316,19 @@ export default function SignupPage() {
           gap: 0.5rem 1rem;
         }
 
-        .contact-options label {
+        .contact-options label,
+        .goals-list label {
           display: flex;
           align-items: center;
           gap: 0.35rem;
           font-weight: 400;
           cursor: pointer;
+        }
+
+        .goals-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
         }
 
         .btn {
@@ -480,7 +487,7 @@ export default function SignupPage() {
 
           <div className="form-group">
             <p>Student Goals <small>(check all that apply)</small></p>
-            <div className="contact-options">
+            <div className="goals-list">
               {STUDENT_GOALS.map(goal => (
                 <label key={goal.value}>
                   <input type="checkbox" name="student_goals[]" value={goal.value} />
