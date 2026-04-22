@@ -526,6 +526,59 @@
   }
 }
 
+/* About page */
+.about-page {
+  @apply min-h-screen pt-20;
+}
+
+.about-hero {
+  @apply text-center py-16 px-5 bg-blue-50;
+}
+
+.about-hero h1 {
+  @apply text-5xl font-black text-gray-800 mb-4;
+}
+
+.about-hero p {
+  @apply text-xl text-gray-600 max-w-2xl mx-auto;
+}
+
+.about-section {
+  @apply py-16 px-5 max-w-5xl mx-auto;
+}
+
+.team-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-12 justify-items-center;
+}
+
+.team-card {
+  @apply bg-white p-8 rounded-xl shadow-lg text-center max-w-md w-full;
+}
+
+.team-card .team-photo {
+  @apply w-full h-auto rounded-xl mb-6;
+}
+
+.team-card .team-name {
+  @apply text-2xl font-bold text-gray-800 mb-2;
+}
+
+.team-card .team-credentials {
+  @apply text-lg text-primary-600 font-semibold mb-2;
+}
+
+.team-card .team-experience {
+  @apply text-gray-600 mb-6;
+}
+
+.team-card .team-links {
+  @apply flex justify-center gap-6;
+}
+
+.team-card .social-link {
+  @apply text-2xl text-gray-600 hover:text-primary-600 transition-colors duration-300;
+}
+
 @media (max-width: 480px) {
   .hero-title {
     @apply text-3xl;

@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-type SectionId = 'home' | 'curriculum' | 'pricing' | 'contact' | 'team';
+type SectionId = 'home' | 'curriculum' | 'pricing' | 'contact';
 
-const SECTION_IDS: SectionId[] = ['home', 'curriculum', 'pricing', 'contact', 'team'];
+const SECTION_IDS: SectionId[] = ['home', 'curriculum', 'pricing', 'contact'];
 
 function getInitialActiveSection(pathname: string): SectionId | null {
   if (pathname === '/' || pathname.startsWith('/#')) return 'home';
@@ -26,7 +26,7 @@ export default function SiteHeader() {
       { id: 'curriculum' as const, label: 'Curriculum', href: '/#curriculum' },
       { id: 'pricing' as const, label: 'Pricing', href: '/#pricing' },
       { id: 'contact' as const, label: 'Contact', href: '/#contact' },
-      { id: 'team' as const, label: 'Team', href: '/#team' }
+      { id: 'about' as const, label: 'About Us', href: '/about' }
     ],
     []
   );
@@ -119,7 +119,7 @@ export default function SiteHeader() {
                   className={pathname === '/' && activeSection === l.id ? 'active' : undefined}
                   onClick={() => {
                     setMenuOpen(false);
-                    if (pathname === '/') setActiveSection(l.id);
+                    if (pathname === '/' && l.id !== 'about') setActiveSection(l.id as SectionId);
                   }}
                 >
                   {l.label}

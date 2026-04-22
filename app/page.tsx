@@ -169,26 +169,6 @@ export default function HomePage() {
         </form>
       </section>
 
-      <section id="team" className="section team-section">
-        <h2>Meet the Team</h2>
-        <div className="team-container">
-          <div className="team-member">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/varteam.png" alt="Founder 1" className="team-photo" />
-            <a href="https://www.linkedin.com/in/varun-pannala-050a6627a/" target="_blank" rel="noreferrer">
-              Varun Pannala
-            </a>
-          </div>
-          <div className="team-member">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/omteam.png" alt="Founder 2" className="team-photo" />
-            <a href="https://www.linkedin.com/in/om-raheja-91a26b314/" target="_blank" rel="noreferrer">
-              Om Raheja
-            </a>
-          </div>
-        </div>
-      </section>
-
       <footer>
         <div className="footer-container">
           <h1>Contact Us</h1>
